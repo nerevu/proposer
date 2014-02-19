@@ -1,0 +1,17 @@
+Flask==0.10.1
+Flask-Script==0.5.1
+Jinja2==2.7.1
+MarkupSafe==0.18
+PyYAML==3.10
+Pygments==1.6
+Werkzeug==0.9.4
+docopt==0.6.1
+itsdangerous==0.23
+misaka==1.0.2
+numpy==1.7.0
+pandas==0.10.1
+python-dateutil==2.2
+pytz==2013.9
+requests==1.2.3
+six==1.5.2
+tabulate==0.7.2
