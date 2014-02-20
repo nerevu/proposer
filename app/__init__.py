@@ -12,9 +12,22 @@ import config
 import yaml
 
 from os import path as p
-from flask import Flask, g, render_template
+from flask import Flask, g, render_template, url_for, redirect
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.markdown import Markdown
+from flask_weasyprint import HTML
+from weasyprint.css import find_stylesheets
+
+def _get_styles(app, style_urls):
+	"""Gets the content of the given list of style URLs."""
+	styles = []
+	for style_url in style_urls:
+		with app.test_client() as c:
+			response = c.get(style_url)
+			encoding = response.charset
+			content = response.data.decode(encoding)
+		styles.append(content)
+	return styles
 
 
 def create_app(config_mode=None, config_file=None):
@@ -43,5 +56,14 @@ def create_app(config_mode=None, config_file=None):
 	@app.route('/<style>/')
 	def index(style):
 		return render_template('%s.html' % style)
+
+	@app.route('/render/<style>/')
+	def render(style):
+		html = HTML(string=render_template('%s.html' % style))
+		stylesheets = find_stylesheets(html.root_element, html.media_type, html.url_fetcher)
+		urls = [sheet.base_url for sheet in stylesheets]
+		style_urls = filter(lambda x: x.endswith('css'), urls)
+		styles = _get_styles(app, style_urls)
+		return render_template('%s.html' % style, styles=styles)
 
 	return app

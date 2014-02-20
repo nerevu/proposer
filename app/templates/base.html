@@ -1,4 +1,13 @@
+{%- if styles %}
+<style>
+	{% for style in styles -%}
+	{{ style }}
+	{% endfor -%}
+</style>
+{% else -%}
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+{% endif -%}
+
 {% extends "bootstrap_responsive.html" %}
 
 {% block body_content %}
