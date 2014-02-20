@@ -7,9 +7,13 @@
     {% filter markdown %}
 ## Table of Contents
 
+- - -
+
 [TOC]
 
 ## Project Summary
+
+- - -
 
 ### Overview
 
@@ -29,9 +33,9 @@ Freelancer | {{ g.site.author }} | {{ g.site.author_email }}
 * {{ feature.name }}
 {% endfor %}
 
-- - -
-
 ## Relevant Skills/Experience
+
+- - -
 
 I have extensive experience in data analysis and application development
 using the in various technologies including the following:
@@ -46,9 +50,9 @@ Should you wish to see more information, please view the following:
 * [{{ l.name }}]({{ l.site }})
 {% endfor %}
 
-- - -
-
 ## Scope of Work
+
+- - -
 
 ### Project Details
 
@@ -101,9 +105,9 @@ Feature{% for i in g.schedule %}{% if i.is_release %}|{{ i.milestone }}{% endif 
 {% for f in g.features %}{{ f.name }}{% for i in g.schedule %}{% if i.is_release %}{% if i.features[f.id] %}|✅{% else %}|{% endif %}{% endif %}{% endfor %}
 {% endfor %}
 
-- - -
-
 ## Expectations
+
+- - -
 
 ### From Me
 
@@ -120,9 +124,9 @@ Feature{% for i in g.schedule %}{% if i.is_release %}|{{ i.milestone }}{% endif 
 1. Advance notification of non-availability (24 hours notice).
 1. Formal Approval of all deliverables.
 
-- - -
-
 ## Terms and Conditions
+
+- - -
 
 ### Late Penalty
 
