@@ -1,0 +1,122 @@
+# ----------------------- #
+#      Main Configs       #
+# ----------------------- #
+# Project
+project_name: Projector
+project_num: 123456
+project_goal: develop a web and android phonegap application
+features:
+- id: 1
+  name: feature1
+- id: 2
+  name: feature2
+- id: 3
+  name: feature3
+
+license:
+  name: BSD
+  site: http://opensource.org/licenses/GPL-3.0
+
+project_estimate: 1,500
+pricing: Fixed # Fixed or Hourly
+hourly_rate: 50
+currency: USD
+
+timeframe:
+  development:
+    period: 4
+    units: week
+    unit_penalty: 50
+    max_penalty: 150
+  milestones:
+    units: day
+  support:
+    period: 1
+    units: week
+    methods: IM/email
+  warranty:
+    period: 8
+    units: week
+
+# Freelancer
+links:
+- name: My GitHub Account
+  site: https://github.com/reubano
+- name: My LinkedIn Profile
+  site: https://www.linkedin.com/in/reubano
+
+# Client
+client_name: Reuben Client
+client_email: reubano@gmail.com
+full_company_name: Ongeza Tanzania Ltd
+short_company_name: Ongeza
+
+# ----------------------- #
+#      Schedule Configs   #
+# ----------------------- #
+# use offset to start a milestone before the previous one has ended
+schedule:
+- phase: Research
+  milestone: Revision Plan
+  is_release: false
+  duration: 3
+  offset: 0
+  payment: 0
+- phase: Prototype
+  milestone: Alpha Release
+  is_release: true
+  duration: 3
+  offset: 0
+  payment: 100
+  features: {1: true, 2: false, 3: false}
+- phase: Modification
+  milestone: Beta Release
+  is_release: true
+  duration: 3
+  offset: 0
+  payment: 200
+  features: {1: true, 2: true, 3: false}
+- phase: Finalization
+  milestone: Final Release
+  is_release: true
+  duration: 3
+  offset: 0
+  payment: 200
+  features: {1: true, 2: true, 3: true}
+
+# ----------------------- #
+#      Misc Configs       #
+# ----------------------- #
+experience:
+- topic: Data Analysis
+  entries: [Microsoft Excel, R/MATLAB, Python Pandas]
+- topic: Database Development
+  entries: [SQLite, MySQL, PostgreSQL]
+- topic: Programming
+  entries: [Python, PHP, BASH/Shell, SQL, Javascript, HTML5/CSS3]
+
+technology:
+- category: Development Platform
+  spec: Mac OSX 10.7.5
+- category: Production Platform
+  spec: Heroku
+- category: Web Server Language(s)
+  spec: Javascript/CoffeeScript
+- category: Web Server Framework(s)
+  spec: Node/Express
+- category: Backend Language
+  spec: Python
+- category: Backend Database
+  spec: Postgres
+- category: Backend Frameworks
+  spec: Flask
+- category: Client Language(s)
+  spec: Javascript/CoffeeScript/HTML/CSS
+- category: Client Framework(s)
+  spec: Backbone/Chaplin/Brunch
+
+# Default date format is "ordinal" (resulting in "July 22nd 2007")
+# You can customize the format as defined in
+# http://www.ruby-doc.org/core-1.9.2/Time.html#method-i-strftime
+# Additionally, %o will give you the ordinal representation of the day
+date_format: "ordinal"

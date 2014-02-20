@@ -1,0 +1,30 @@
+table {
+    background-color: rgba(0, 0, 0, 0);
+    border-collapse: collapse;
+    border-spacing: 0;
+    max-width: 100%;
+    margin-bottom: 20px;
+    width: 100%;
+}
+table th, table td {
+    border-top: 1px solid #DDDDDD;
+    line-height: 20px;
+    padding: 8px;
+    text-align: left;
+    vertical-align: top;
+}
+table th {
+    font-weight: bold;
+}
+table thead th {
+    vertical-align: bottom;
+}
+table caption + thead tr:first-child th, table caption + thead tr:first-child td, table colgroup + thead tr:first-child th, table colgroup + thead tr:first-child td, table thead:first-child tr:first-child th, table thead:first-child tr:first-child td {
+    border-top: 0 none;
+}
+table tbody + tbody {
+    border-top: 2px solid #DDDDDD;
+}
+table tbody tr:nth-child(2n+1) td, table tbody tr:nth-child(2n+1) th {
+    background-color: #F9F9F9;
+}

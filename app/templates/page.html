@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block container_content %}
+<div class="jumbotron">
+	<h1>Project Proposal</h1>
+	<p class="lead">Submitted by {{ g.site.author }} to {{ g.client_name }} on {{ g.site.date }}</p>
+</div>
+<hr>
+{% block main_content %}{% endblock %}
+{% endblock container_content %}

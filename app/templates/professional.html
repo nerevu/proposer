@@ -1,0 +1,189 @@
+{% extends "page.html" %}
+{% import "bootstrap_wtf.html" as wtf %}
+{% block main_content %}
+<div class="row">
+	<div class="span12">
+
+    {% filter markdown %}
+## Table of Contents
+
+[TOC]
+
+## Project Summary
+
+### Overview
+
+You ({{ g.full_company_name }}) are hiring me ({{ g.site.author }}) to {{ g.project_goal }}
+within {{ g.timeframe.development.period }} {{ g.timeframe.development.units }}s for {{ g.project_estimate }} {{ g.currency }}. This project shall hereafter be referred to as {{ g.project_name }}
+
+### Points of Contact
+
+Company | Name | Email
+--------|------|-------
+{{ g.short_company_name }} | {{ g.client_name }} | {{ g.client_email }}
+Freelancer | {{ g.site.author }} | {{ g.site.author_email }}
+
+### Objectives
+
+{% for feature in g.features %}
+* {{ feature.name }}
+{% endfor %}
+
+- - -
+
+## Relevant Skills/Experience
+
+I have extensive experience in data analysis and application development
+using the in various technologies including the following:
+
+| {% for i in g.experience %}{{ i.topic }}|{% endfor %}
+| {% for i in g.experience %}-------------|{% endfor %}
+| {% for i in g.experience %}{% for e in i.entries %}{{ e }}<br>{% endfor %}|{% endfor %}
+
+Should you wish to see more information, please view the following:
+
+{% for l in g.links %}
+* [{{ l.name }}]({{ l.site }})
+{% endfor %}
+
+- - -
+
+## Scope of Work
+
+### Project Details
+
+#### Project Estimate
+
+The estimated cost for completing {{ g.project_name }} is **{{ g.project_estimate }}
+{{ g.currency }}** and includes the following phases:
+
+{% for i in g.schedule %}
+* {{ i.phase }}
+{% endfor %}
+
+If you are not happy with my work at the end of any phase, you will pay in full
+for all of the completed work (outlined in 'Project schedule' below) and are
+free to cancel the remainder of the contract. If at any time you want to add
+extra functionality (Add-ons), you can commission me to make the necessary
+revisions at the hourly rate of {{ g.hourly_rate }} {{ g.currency }}.
+
+#### Project Structure
+
+Category | Details
+---------|---------
+Development Period	| {{ g.timeframe.development.period }} {{ g.timeframe.development.units }}s
+Pricing Structure	| {{ g.pricing }}
+Support | {{ g.support_timeframe }} via IM/email
+Warranty | {{ g.timeframe.warranty.period }} {{ g.timeframe.warranty.units }}s
+
+### Technical specifications
+
+The deliverables will require the use of the following technologies:
+
+Category | Specification
+---------|--------------
+{% for i in g.technology %}{{ i.category }}|{{ i.spec}}
+{% endfor %}
+
+### Scheduling
+
+#### Project schedule ({{ g.timeframe.development.units }}s 1 - {{ g.timeframe.development.period }})
+
+Phase | Duration ({{ g.timeframe.milestones.units }}s) | Milestone | Due at Completion
+------|----------------------------------------------:|-----------|------------------:
+{% for i in g.schedule %}{{ i.phase }} | {{ i.duration }} | {{ i.milestone }} | {{ i.payment }}
+{% endfor %}
+
+#### Release Comparison
+
+Feature{% for i in g.schedule %}{% if i.is_release %}|{{ i.milestone }}{% endif %}{% endfor %}
+--------{% for i in g.schedule %}{% if i.is_release %}|-------:{% endif %}{% endfor %}
+{% for f in g.features %}{{ f.name }}{% for i in g.schedule %}{% if i.is_release %}{% if i.features[f.id] %}|✅{% else %}|{% endif %}{% endif %}{% endfor %}
+{% endfor %}
+
+- - -
+
+## Expectations
+
+### From Me
+
+1. Timely submission of documents and deliverables (both final and revisions) as per schedule.
+1. Advance notification of non-availability (24 hours notice).
+1. Advance notification if scheduled deliverable or milestone will be delayed with reasons for the delay and the mitigating steps I will take (within 12 hours of identification).
+1. Advance notification of documents and deliverables that require your review (12 hours notice).
+
+### From You
+
+1. Access to necessary software, hardware, and other resources necessary for completion of deliverables.
+1. Advance notification of preferred timelines for a deliverable or milestone in case proposed timelines are not convenient (prior to beginning {{ g.project_name }}).
+1. Timely review of documents and deliverables and feedback or suggestions for changes (24 hours).
+1. Advance notification of non-availability (24 hours notice).
+1. Formal Approval of all deliverables.
+
+- - -
+
+## Terms and Conditions
+
+### Late Penalty
+
+If I have not completed the last milestone by the end of {{ g.timeframe.development.units }} {{ g.timeframe.development.period }}, I will deduct {{ g.timeframe.development.unit_penalty }} {{ g.currency }} from the total amount owed for each additional {{ g.timeframe.development.units }} it takes to complete the milestone (up to a maximum of {{ g.timeframe.development.max_penalty }} {{ g.currency }}). This does not include delays caused by late payments or time spent waiting for you to deliver requested data or information.
+
+### Project Fee Calculation
+
+The final fee will be a total of the estimate and accrued pre-approved project expenses minus late penalty (if any). Add-ons are billed in 15 minute increments and have a 1 hour minimum. The amount due on the final invoice will be the final fee minus all previous payments.
+
+### Timing and Mode of Payments
+
+Payments should be made on the day of each milestone completion outlined in 'Project schedule' above. If I do not receive payment on the milestone completion day, I will postpone {{ g.project_name }} until I receive payment. Additionally, I will charge a late payment fee of $10 per week.
+
+### Validity
+
+This proposal is valid for 30 days from the date of this offer.
+
+### Force Majeure
+
+I am not responsible for delays caused by acts of nature or any other reason beyond my reasonable control.
+
+##	Relationship
+
+You acknowledge and agree that the services performed by me, my agents, or sub-contractors shall be as an independent contractor and that nothing in this proposal shall be deemed to constitute a partnership, joint venture, agency relationship, or otherwise between you and I.
+
+### Intellectual Property Rights
+
+Upon receiving your final payment, I will assign copyright to you as follows:
+
+* You will own the application binary, documentation, graphics, and other visual elements created for you.
+* You will also own text, photographs, and other data you provide, unless someone else owns them.
+* I will own {{ g.project_name }} source code and distribute it to you under the terms of the [{{g.license.name}} License]({{g.license.site}})
+* I reserve the right to use any libraries or modules developed for {{ g.project_name }} in future work,
+but will not be allowed to repackage the source code for resale as is without
+modifications including but not limited to feature enhancements, performance/usability
+improvements, or user interface redesign.
+* I also reserve the right to use screen-shots from the completed application (subject to your approval) as part of my portfolio and to write about {{ g.project_name }} online or in print in a general nature (subject to your review).
+
+### Non Disclosure & Confidentiality
+
+The contents of the proposal should not be shown, read, or otherwise disclosed to any
+third party who is not a current employee of Ongeza without my written consent.
+
+In the course of performing the Services, you recognize that I may come in contact or become familiar with information which you or your affiliates may consider proprietary. I agree to keep all such information confidential and not to discuss or divulge it to anyone other than appropriate Ongeza personnel or their designees.
+
+### Termination of Agreement
+
+In the event of an unforeseen situation preventing a continuation of this agreement,
+either of us may terminate this agreement on thirty (30) days written notice.
+In the event of the termination of this agreement, appropriate payments will be
+settled as per efforts completed.
+
+### Warranty & Security Measures
+
+I will provide a warranty of {{ g.timeframe.warranty.period }} {{ g.timeframe.warranty.units }}s for {{ g.project_name }} from the date of
+its completion. During this time I will fix any bugs or usability issues caused by me and within the scope of this proposal. Issues caused by modifications to {{ g.project_name }} by anyone other than myself or my designee(s) are not covered under this warranty. For any work done on {{ g.project_name }} not covered under this warranty, you will be charged the hourly rate outlined in App Modification under Add-ons above. All such requests must be in writing.
+
+I will ensure the deliverables will be free from malicious code, viruses,
+back doors, etc.
+    {% endfilter %}
+	</div>
+</div>
+{% endblock main_content %}
+
