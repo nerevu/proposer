@@ -24,9 +24,7 @@ def _get_styles(app, style_urls):
 	for style_url in style_urls:
 		with app.test_client() as c:
 			response = c.get(style_url)
-			encoding = response.charset
-			content = response.data.decode(encoding)
-		styles.append(content)
+		styles.append(response.data)
 	return styles
 
 
