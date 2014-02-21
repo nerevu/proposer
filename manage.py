@@ -27,10 +27,12 @@ def render_app(app, style):
 		return response.data.decode(encoding)
 
 
+@manager.option('-i', '--info', help='the client info file, defaults to info.yml')
 @manager.option('-s', '--style', help='the proposal style, defaults to professional.md')
-def propose(style=None):
+def propose(info=None, style=None):
 	"""Create Proposal"""
 	style = (style or app.config['STYLE'])
+	app.config['INFO_PATH'] = (info or app.config['INFO_PATH'])
 	stream = file(app.config['INFO_PATH'], 'r')
 	details = yaml.safe_load(stream)
 	client_name = details['client_name']
