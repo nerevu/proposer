@@ -17,6 +17,8 @@ from flask.ext.bootstrap import Bootstrap
 from flask.ext.markdown import Markdown
 from flask_weasyprint import HTML, render_pdf
 from weasyprint.css import find_stylesheets
+from app.tables import TableExtension
+
 
 def _get_styles(app, style_urls):
 	"""Gets the content of the given list of style URLs."""
@@ -34,7 +36,9 @@ def create_app(config_mode=None, config_file=None):
 	# Flask application
 	app = Flask(__name__)
 	Bootstrap(app)
-	Markdown(app, extensions=['tables', 'toc'])
+	md = Markdown(app, extensions=['toc'])
+	md.register_extension(TableExtension)
+
 
 	if config_mode:
 		app.config.from_object(getattr(config, config_mode))
