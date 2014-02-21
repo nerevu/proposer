@@ -3,14 +3,22 @@
 {% block style %}
 	{%- if styles %}
 		<style>
-		body {padding-top: 60px;}
-		{% for style in styles -%}
-		{{ style|safe }}
-		{% endfor -%}
+			body {padding-top: 60px;}
+			{% for style in styles -%}
+			{{ style|safe }}
+			{% endfor -%}
 		</style>
 	{% else -%}
 		{{super()}}
 		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+	{% endif -%}
+	{%- if to_print %}
+		<style>
+/* 			.container {width: 744px;} */
+
+			@page {size: A5; margin: 1cm}
+			@media print {nav {display: none}}
+		</style>
 	{% endif -%}
 {%- endblock %}
 

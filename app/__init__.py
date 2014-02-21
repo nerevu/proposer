@@ -12,10 +12,10 @@ import config
 import yaml
 
 from os import path as p
-from flask import Flask, g, render_template, url_for, redirect
+from flask import Flask, g, render_template, url_for, redirect, Response
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.markdown import Markdown
-from flask_weasyprint import HTML
+from flask_weasyprint import HTML, render_pdf
 from weasyprint.css import find_stylesheets
 
 def _get_styles(app, style_urls):
@@ -56,12 +56,24 @@ def create_app(config_mode=None, config_file=None):
 		return render_template('%s.html' % style)
 
 	@app.route('/render/<style>/')
-	def render(style):
-		html = HTML(string=render_template('%s.html' % style))
-		stylesheets = find_stylesheets(html.root_element, html.media_type, html.url_fetcher)
-		urls = [sheet.base_url for sheet in stylesheets]
-		style_urls = filter(lambda x: x.endswith('css'), urls)
-		styles = _get_styles(app, style_urls)
-		return render_template('%s.html' % style, styles=styles)
+	@app.route('/render/<style>/<type>/')
+	def render(style, type='html'):
+		if type.startswith('html'):
+			html = HTML(string=render_template('%s.html' % style))
+			stylesheets = find_stylesheets(html.root_element, html.media_type, html.url_fetcher)
+			urls = [sheet.base_url for sheet in stylesheets]
+			style_urls = filter(lambda x: x.endswith('css'), urls)
+			styles = _get_styles(app, style_urls)
+			kwargs = {'styles': styles}
+			return render_template('%s.html' % style, **kwargs)
+		elif type.startswith('pdf'):
+			kwargs = {'to_print': True}
+			return render_pdf(url_for('index', style=style))
+		elif type.startswith('png'):
+			kwargs = {'to_print': True}
+			html = HTML(string=render_template('%s.html' % style, **kwargs))
+			return Response(html.write_png(), mimetype='image/png')
+		else:
+			pass
 
 	return app
