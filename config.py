@@ -28,16 +28,17 @@ class Config(object):
 	EXPORT_DIR = p.join(_basedir, 'exports')
 	INFO_PATH = p.join(_basedir, 'info.yml')
 	STYLE = 'professional'
+	TABLE = '<table class="table table-striped">'
 
-
-	BOOTSTRAP_USE_MINIFIED = True
+	BOOTSTRAP_USE_MINIFIED = False
 	BOOTSTRAP_USE_CDN = False
 	BOOTSTRAP_FONTAWESOME = False
-	BOOTSTRAP_HTML5_SHIM = True
+	BOOTSTRAP_HTML5_SHIM = False
 
 
 class Production(Config):
 	HOST = '0.0.0.0'
+	BOOTSTRAP_USE_MINIFIED = True
 	BOOTSTRAP_USE_CDN = True
 	BOOTSTRAP_FONTAWESOME = True
 

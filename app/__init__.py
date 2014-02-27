@@ -11,8 +11,7 @@ from __future__ import print_function
 import config
 import yaml
 
-from os import path as p
-from flask import Flask, g, render_template, url_for, redirect, Response
+from flask import Flask, g, render_template, url_for, Response
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.markdown import Markdown
 from flask_weasyprint import HTML, render_pdf
@@ -47,9 +46,11 @@ def create_app(config_mode=None, config_file=None):
 	else:
 		app.config.from_envvar('APP_SETTINGS', silent=True)
 
-	# set g variables
+	table = app.config['TABLE']
+
 	@app.before_request
 	def before_request():
+		# set g variables
 		stream = file(app.config['INFO_PATH'], 'r')
 		[g.__setattr__(i[0], i[1]) for i in yaml.safe_load(stream).items()]
 		g.site = app.config['SITE']
@@ -57,26 +58,29 @@ def create_app(config_mode=None, config_file=None):
 	# Views
 	@app.route('/<style>/')
 	def index(style):
-		return render_template('%s.html' % style)
+		return render_template('%s.html' % style).replace('<table>', table)
 
 	@app.route('/render/<style>/')
 	@app.route('/render/<style>/<type>/')
 	def render(style, type='html'):
 		if type.startswith('html'):
-			html = HTML(string=render_template('%s.html' % style))
-			stylesheets = find_stylesheets(html.root_element, html.media_type, html.url_fetcher)
+			html = render_template('%s.html' % style).replace('<table>', table)
+			html_doc = HTML(string=html)
+			stylesheets = find_stylesheets(
+				html_doc.root_element, html_doc.media_type, html_doc.url_fetcher)
 			urls = [sheet.base_url for sheet in stylesheets]
 			style_urls = filter(lambda x: x.endswith('css'), urls)
 			styles = _get_styles(app, style_urls)
 			kwargs = {'styles': styles}
-			return render_template('%s.html' % style, **kwargs)
+			return render_template('%s.html' % style, **kwargs).replace('<table>', table)
 		elif type.startswith('pdf'):
 			kwargs = {'to_print': True}
 			return render_pdf(url_for('index', style=style))
 		elif type.startswith('png'):
 			kwargs = {'to_print': True}
-			html = HTML(string=render_template('%s.html' % style, **kwargs))
-			return Response(html.write_png(), mimetype='image/png')
+			html = render_template('%s.html' % style, **kwargs).replace('<table>', table)
+			html_doc = HTML(string=html)
+			return Response(html_doc.write_png(), mimetype='image/png')
 		else:
 			pass
 
