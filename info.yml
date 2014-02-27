@@ -1,23 +1,75 @@
 # ----------------------- #
 #      Main Configs       #
 # ----------------------- #
+# Client
+client_name: Angelina R.
+client_email: n/a
+full_company_name: Angelina R.
+short_company_name: Angelina
+
 # Project
-project_name: Projector
-project_num: 123456
-project_goal: develop a web and android phonegap application
+project_name: Supermarket Web App
+project_num: 424767
+project_goal: develop a supermarket web application
+
+deliverables:
+- name: Source Code
+  desc: the application's source code
+- name: User Guide
+  desc: a manual which will provide instructions on using, upgrading, and installing the application
+
 features:
 - id: 1
-  name: feature1
+  name: Category Management
+  desc: add, edit, delete, and search categories
 - id: 2
-  name: feature2
+  name: Product Management
+  desc: add, edit, delete, and search products
 - id: 3
-  name: feature3
+  name: Order Management
+  desc: add (place), edit, delete, and search orders
+- id: 4
+  name: Sales Reports
+  desc: view quantity and amount of each product sold in a given date range
+- id: 5
+  name: Available Inventory
+  desc: view the quantity available for each product in a given category
+
+services:
+- name: Domain Registration
+  desc: the application will have a publically available `herokuapp.com` domain
+- name: Hosting
+  desc: the application will be hosted for free on [Heroku](www.heroku.com)
+- name: Installation
+  desc: migrating the application from my Heroku account to your Heroku account
+
+platform:
+  development:
+    hardware: Macbook Pro
+    os: OSX 10.7.5
+  production:
+    hardware: Heroku Cloud Server
+    os: Ubuntu Linux
+
+technology:
+- category: Web Server
+  type: n/a
+  language: Python
+  framework: Flask
+- category: Database Server
+  type: Postgres
+  language: Python
+  framework: Flask
+- category: Web Client
+  type: Desktop/Mobile
+  language: Javascript/HTML/CSS
+  framework: Flask
 
 license:
   name: BSD
   site: http://opensource.org/licenses/BSD-3-Clause
 
-project_estimate: 1,500
+project_estimate: 950
 pricing: Fixed # Fixed or Hourly
 hourly_rate: 50
 currency: USD
@@ -25,69 +77,66 @@ days_valid: 7
 
 timeframe:
   development:
-    period: 4
+    period: 3
     units: week
+    days_per_unit: 5
     unit_penalty: 50
     max_penalty: 150
   milestones:
-    units: day
+    units: business day
   support:
     period: 1
     units: week
     methods: IM/email
   warranty:
-    period: 8
+    period: 4
     units: week
 
-# Freelancer
+# ----------------------- #
+#      Schedule Configs   #
+# ----------------------- #
+schedule:
+- phase: Research
+  description: verify that the proposed technology stack and approach are appropriate and that required feature set is feasible
+  milestone: Revision Plan
+  is_release: false
+  start: 1
+  duration: 2
+  payment: 0
+- phase: Prototype
+  description: create an application with basic functionality
+  milestone: Alpha Release
+  is_release: true
+  start: 3
+  duration: 5
+  payment: 200
+  features: {1: true, 2: true, 3: true, 4: false, 5: false}
+- phase: Modification
+  description: create an application with compete functionality
+  milestone: Beta Release
+  is_release: true
+  start: 8
+  duration: 5
+  payment: 400
+  features: {1: true, 2: true, 3: true, 4: true, 5: true}
+- phase: Finalization
+  description: fix any remaining issues with the application, migrate servers, and transfer source code
+  milestone: Final Release
+  is_release: true
+  start: 13
+  duration: 3
+  payment: 350
+  features: {1: true, 2: true, 3: true, 4: true, 5: true}
+
+# ----------------------- #
+#      Misc Configs       #
+# ----------------------- #
 links:
 - name: My GitHub Account
   site: https://github.com/reubano
 - name: My LinkedIn Profile
   site: https://www.linkedin.com/in/reubano
 
-# Client
-client_name: Some Client
-client_email: client@gmail.com
-full_company_name: Full Company
-short_company_name: Company
-
-# ----------------------- #
-#      Schedule Configs   #
-# ----------------------- #
-# use offset to start a milestone before the previous one has ended
-schedule:
-- phase: Research
-  milestone: Revision Plan
-  is_release: false
-  duration: 3
-  offset: 0
-  payment: 0
-- phase: Prototype
-  milestone: Alpha Release
-  is_release: true
-  duration: 3
-  offset: 0
-  payment: 100
-  features: {1: true, 2: false, 3: false}
-- phase: Modification
-  milestone: Beta Release
-  is_release: true
-  duration: 3
-  offset: 0
-  payment: 200
-  features: {1: true, 2: true, 3: false}
-- phase: Finalization
-  milestone: Final Release
-  is_release: true
-  duration: 3
-  offset: 0
-  payment: 200
-  features: {1: true, 2: true, 3: true}
-
-# ----------------------- #
-#      Misc Configs       #
-# ----------------------- #
 experience:
 - topic: Data Analysis
   entries: [Microsoft Excel, R/MATLAB, Python Pandas]
@@ -95,23 +144,3 @@ experience:
   entries: [SQLite, MySQL, PostgreSQL]
 - topic: Programming
   entries: [Python, PHP, BASH/Shell, SQL, Javascript, HTML5/CSS3]
-
-technology:
-- category: Development Platform
-  spec: Mac OSX 10.7.5
-- category: Production Platform
-  spec: Heroku
-- category: Web Server Language(s)
-  spec: Javascript/CoffeeScript
-- category: Web Server Framework(s)
-  spec: Node/Express
-- category: Backend Language
-  spec: Python
-- category: Backend Database
-  spec: Postgres
-- category: Backend Frameworks
-  spec: Flask
-- category: Client Language(s)
-  spec: Javascript/CoffeeScript/HTML/CSS
-- category: Client Framework(s)
-  spec: Backbone/Chaplin/Brunch

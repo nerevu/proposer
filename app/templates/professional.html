@@ -1,6 +1,63 @@
 {% extends "page.html" %}
 {% import "bootstrap_wtf.html" as wtf %}
 {% block main_content %}
+
+{% macro projdays() -%}
+	{{ g.timeframe.development.period * g.timeframe.development.days_per_unit }}
+{%- endmacro %}
+
+{% macro listize(items) -%}
+	{%- filter lower -%}
+		{%- if items|length > 2 -%}
+			{%- for item in items -%}
+				{%- if not loop.last %}{{ item.name }}, {% else -%}
+					and {{ item.name }}
+				{%- endif -%}
+			{%- endfor -%}
+		{%- elif items|length > 1 -%}
+			{%- for item in items -%}
+				{%- if not loop.last %}{{ item.name }} {% else -%}
+					and {{ item.name }}
+				{%- endif -%}
+			{%- endfor %}
+		{%- else -%}
+			{%- for item in items -%}{{ item.name }}{%- endfor %}
+		{%- endif -%}
+	{%- endfilter -%}
+{%- endmacro -%}
+
+{% macro filldays(max) -%}
+	{%- for days in [1]|batch(max|int, 1) -%}
+		{%- for day in days -%}
+			|{{ day + loop.index0 }}
+		{%- endfor -%}
+	{%- endfor -%}
+{% endmacro %}
+
+{% macro fillbars(max) %}
+	{%- for days in [1]|batch(max|int, 1) -%}
+		{%- for day in days -%}
+			|-
+		{%- endfor -%}
+	{%- endfor -%}
+{% endmacro %}
+
+{% macro fillsquares(start, duration) %}
+	{%- if start > 1 -%}
+		{%- for days in [1]|batch(start - 1, 1) -%}
+			{%- for day in days -%}
+				|
+			{%- endfor -%}
+		{%- endfor -%}
+	{%- endif -%}
+	{%- for days in [1]|batch(duration, 1) -%}
+		{%- for day in days -%}
+			|⬛
+		{%- endfor -%}
+	{%- endfor -%}
+{% endmacro %}
+
+
 <div class="row">
 	<div class="span12">
 
@@ -17,8 +74,13 @@
 
 ### Overview
 
-You ({{ g.full_company_name }}) are hiring me ({{ g.site.author }}) to {{ g.project_goal }}
-within {{ g.timeframe.development.period }} {{ g.timeframe.development.units }}s for {{ g.project_estimate }} {{ g.currency }}. This project shall hereafter be referred to as {{ g.project_name }}
+I propose that you ({{ g.full_company_name }}) hire me ({{ g.site.author }}) to
+{{ g.project_goal }} within {{ g.timeframe.development.period }}
+{{ g.timeframe.development.units }}s for **{{ g.project_estimate }}
+{{ g.currency }}**. Upon completion of the project (hereafter referred to as
+{{ g.project_name }}), I will deliver {{ listize(g.deliverables) }}.
+The features {{ g.project_name }} will have are {{ listize(g.features) }}.
+Additionally, I shall perform the services of {{ listize(g.services) }}.
 
 ### Points of Contact
 
@@ -29,22 +91,41 @@ Freelancer | {{ g.site.author }} | {{ g.site.author_email }}
 
 ### Objectives
 
+#### Deliverables
+
+Upon the completion of {{ g.project_name }}, I will deliver the following items:
+
+{% for deliverable in g.deliverables %}
+* **{{ deliverable.name }}**: {{ deliverable.desc }}
+{% endfor %}
+
+#### Features
+
+{{ g.project_name }} will have the following features:
+
 {% for feature in g.features %}
-* {{ feature.name }}
+* **{{ feature.name }}**: {{ feature.desc }}
+{% endfor %}
+
+#### Services
+
+I will perform the following services regarding {{ g.project_name }}:
+
+{% for service in g.services %}
+* **{{ service.name }}**: {{ service.desc }}
 {% endfor %}
 
 ## Relevant Skills/Experience
 
 - - -
 
-I have extensive experience in data analysis and application development
-using the in various technologies including the following:
+I have extensive experience in the following areas related to {{ g.project_name }}:
 
-| {% for i in g.experience %}{{ i.topic }}|{% endfor %}
-| {% for i in g.experience %}-------------|{% endfor %}
-| {% for i in g.experience %}{% for e in i.entries %}{{ e }}<br>{% endfor %}|{% endfor %}
+|{% for i in g.experience %}{{ i.topic }}|{% endfor %}
+|{% for i in g.experience %}:-------------:|{% endfor %}
+|{% for i in g.experience %}{% for e in i.entries %}{{ e }}<br>{% endfor %}|{% endfor %}
 
-Should you wish to see more information, please view the following:
+Should you wish to see more information about my background, please view the following:
 
 {% for l in g.links %}
 * [{{ l.name }}]({{ l.site }})
@@ -62,11 +143,11 @@ The estimated cost for completing {{ g.project_name }} is **{{ g.project_estimat
 {{ g.currency }}** and includes the following phases:
 
 {% for i in g.schedule %}
-* {{ i.phase }}
+* **{{ i.phase }}**: {{ i.description }}
 {% endfor %}
 
 If you are not happy with my work at the end of any phase, you will pay in full
-for all of the completed work (outlined in 'Project schedule' below) and are
+for all of the completed work (outlined in *Project schedule* below) and are
 free to cancel the remainder of the contract. If at any time you want to add
 extra functionality (Add-ons), you can commission me to make the necessary
 revisions at the hourly rate of {{ g.hourly_rate }} {{ g.currency }}.
@@ -75,33 +156,58 @@ revisions at the hourly rate of {{ g.hourly_rate }} {{ g.currency }}.
 
 Category | Details
 ---------|---------
-Development Period	| {{ g.timeframe.development.period }} {{ g.timeframe.development.units }}s
-Pricing Structure	| {{ g.pricing }}
-Support | {{ g.support_timeframe }} via IM/email
-Warranty | {{ g.timeframe.warranty.period }} {{ g.timeframe.warranty.units }}s
+Development Period|{{ g.timeframe.development.period }} {{ g.timeframe.development.units }}s
+Pricing Structure|{{ g.pricing }}
+Support|{{ g.support_timeframe }} via IM/email
+Warranty|{{ g.timeframe.warranty.period }} {{ g.timeframe.warranty.units }}s
 
 ### Technical specifications
 
-The deliverables will require the use of the following technologies:
+{{ g.project_name }} will run on the following platforms:
 
-Category | Specification
----------|--------------
-{% for i in g.technology %}{{ i.category }}|{{ i.spec}}
+Mode | Hardware | Operating System
+-----|----------|-----------------
+Development|{{ g.platform.development.hardware }}|{{ g.platform.development.os }}
+Production|{{ g.platform.production.hardware }}|{{ g.platform.production.os }}
+
+{{ g.project_name }} will require the use of the following technologies:
+
+Category | Type | Programming Language(s) | Framework
+---------|------|-------------------------|----------
+{% for i in g.technology -%}
+	{{ i.category }}|{{ i.type }}|{{ i.language }}|{{ i.framework }}
 {% endfor %}
 
 ### Scheduling
 
 #### Project schedule ({{ g.timeframe.development.units }}s 1 - {{ g.timeframe.development.period }})
 
-Phase | Duration ({{ g.timeframe.milestones.units }}s) | Milestone | Due at Completion
-------|----------------------------------------------:|-----------|------------------:
-{% for i in g.schedule %}{{ i.phase }} | {{ i.duration }} | {{ i.milestone }} | {{ i.payment }}
+{% if projdays()|int > 20 %}
+Phase | Milestone | Due at Completion ({{ g.currency }})
+------|-----------|------------------------------------:
+{% for i in g.schedule %}{{ i.phase }}|{{ i.milestone }}|{{ i.payment }}
 {% endfor %}
+
+Phase | Duration ({{ g.timeframe.milestones.units }}s){{ filldays(projdays()) }}
+------|----------------------------------------------:{{ fillbars(projdays()) }}
+{% for i in g.schedule %}{{ i.phase }}|{{ i.duration }}{{ fillsquares(i.start, i.duration) }}
+{% endfor %}
+
+{% else %}
+Phase | Milestone | Due at Completion ({{ g.currency }}) | Duration ({{ g.timeframe.milestones.units }}s){{ filldays(projdays()) }}
+------|-----------|-------------------------------------:|----------------------------------------------:{{ fillbars(projdays()) }}
+{% for i in g.schedule %}{{ i.phase }}|{{ i.milestone }}|{{ i.payment }}|{{ i.duration }}{{ fillsquares(i.start, i.duration) }}
+{% endfor %}
+{% endif %}
+
+{{ '`Warning, payments do not equal quote!`' if g.schedule|sum(attribute='payment') != g.project_estimate }}
+
+{{ '`Warning, durations do not equal timeframe!`' if g.schedule|sum(attribute='duration') != projdays()|int }}
 
 #### Release Comparison
 
 Feature{% for i in g.schedule %}{% if i.is_release %}|{{ i.milestone }}{% endif %}{% endfor %}
---------{% for i in g.schedule %}{% if i.is_release %}|-------:{% endif %}{% endfor %}
+--------{% for i in g.schedule %}{% if i.is_release %}|:-------:{% endif %}{% endfor %}
 {% for f in g.features %}{{ f.name }}{% for i in g.schedule %}{% if i.is_release %}{% if i.features[f.id] %}|✅{% else %}|{% endif %}{% endif %}{% endfor %}
 {% endfor %}
 
@@ -138,7 +244,7 @@ The final fee will be a total of the estimate and accrued pre-approved project e
 
 ### Timing and Mode of Payments
 
-Payments should be made on the day of each milestone completion outlined in 'Project schedule' above. If I do not receive payment on the milestone completion day, I will postpone {{ g.project_name }} until I receive payment. Additionally, I will charge a late payment fee of $10 per week.
+Payments should be made with 24 hrs of each milestone completion outlined in *Project schedule* above. If I do not receive payment in the time indicated, I will postpone {{ g.project_name }} until I receive payment. Additionally, I will charge a late payment fee of $10 per week.
 
 ### Validity
 
@@ -158,19 +264,17 @@ Upon receiving your final payment, I will assign copyright to you as follows:
 
 * You will own the application binary, documentation, graphics, and other visual elements created for you.
 * You will also own text, photographs, and other data you provide, unless someone else owns them.
-* I will own {{ g.project_name }} source code and distribute it to you under the terms of the [{{ g.license.name }} License]({{ g.license.site }})
-* I reserve the right to use any libraries or modules developed for {{ g.project_name }} in future work,
-but will not be allowed to repackage the source code for resale as is without
-modifications including but not limited to feature enhancements, performance/usability
-improvements, or user interface redesign.
-* I also reserve the right to use screen-shots from the completed application (subject to your approval) as part of my portfolio and to write about {{ g.project_name }} online or in print in a general nature (subject to your review).
+* I will own {{ g.project_name }}'s source code and distribute it to you under the terms of the [{{ g.license.name }} License]({{ g.license.site }}).
+* I reserve the right to use any libraries or modules developed for
+{{ g.project_name }} in future work.
+* I also reserve the right to use screen-shots from the completed application (with all your data removed) as part of my portfolio and to write about {{ g.project_name }} online or in print in a general nature.
 
 ### Non Disclosure & Confidentiality
 
-The contents of the proposal should not be shown, read, or otherwise disclosed to any
-third party who is not a current employee of Ongeza without my written consent.
+The contents of this proposal should not be shown, read, or otherwise disclosed to any
+third party who is not a current employee of {{ g.short_company_name }} without my written consent.
 
-In the course of performing the Services, you recognize that I may come in contact or become familiar with information which you or your affiliates may consider proprietary. I agree to keep all such information confidential and not to discuss or divulge it to anyone other than appropriate Ongeza personnel or their designees.
+In the course of completing {{ g.project_name }}, you recognize that I may come in contact or become familiar with information which you or your affiliates may consider proprietary. I agree to keep all such information confidential and not to discuss or divulge it to anyone other than appropriate personnel or designees of {{ g.short_company_name }}.
 
 ### Termination of Agreement
 
@@ -182,7 +286,7 @@ settled as per efforts completed.
 ### Warranty & Security Measures
 
 I will provide a warranty of {{ g.timeframe.warranty.period }} {{ g.timeframe.warranty.units }}s for {{ g.project_name }} from the date of
-its completion. During this time I will fix any bugs or usability issues caused by me and within the scope of this proposal. Issues caused by modifications to {{ g.project_name }} by anyone other than myself or my designee(s) are not covered under this warranty. For any work done on {{ g.project_name }} not covered under this warranty, you will be charged the hourly rate outlined in App Modification under Add-ons above. All such requests must be in writing.
+its completion. During this time I will fix any bugs or usability issues caused by me and within the scope of this proposal. Issues caused by modifications to {{ g.project_name }} by anyone other than myself or my designee(s) are not covered under this warranty. For any work done on {{ g.project_name }} not covered under this warranty, you will be charged the hourly rate of {{ g.hourly_rate }} {{ g.currency }}.
 
 I will ensure the deliverables will be free from malicious code, viruses,
 back doors, etc.
