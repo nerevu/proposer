@@ -17,7 +17,7 @@ from flask.ext.markdown import Markdown
 from flask_weasyprint import HTML, render_pdf
 from weasyprint.css import find_stylesheets
 from app.tables import TableExtension
-
+from datetime import timedelta, date as d
 
 def _get_styles(app, style_urls):
 	"""Gets the content of the given list of style URLs."""
@@ -54,6 +54,8 @@ def create_app(config_mode=None, config_file=None):
 		stream = file(app.config['INFO_PATH'], 'r')
 		[g.__setattr__(i[0], i[1]) for i in yaml.safe_load(stream).items()]
 		g.site = app.config['SITE']
+		g.valid_until = (d.today() + timedelta(days=g.days_valid)).strftime(
+			"%B %d, %Y")
 
 	# Views
 	@app.route('/<style>/')

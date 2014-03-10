@@ -10,14 +10,16 @@ _user = os.environ.get('USER', os.environ.get('USERNAME'))
 __APP_NAME__ = 'Proposer'
 __YOUR_NAME__ = 'Reuben Cummings'
 __YOUR_EMAIL__ = '%s@gmail.com' % _user
+__YOUR_PHONE__ = ['0789-477-319', '0756-477-319']
 __YOUR_WEBSITE__ = 'http://%s.github.com' % _user
 
 # calculated vars
 app = __APP_NAME__.lower()
 year = d.today().strftime("%Y")
 date = d.today().strftime("%B %d, %Y")
-site_keys = ('author', 'author_email', 'author_url', 'year', 'date')
-site_values = (__YOUR_NAME__, __YOUR_EMAIL__, __YOUR_WEBSITE__, year, date)
+site_keys = ('author', 'author_email', 'author_phone', 'author_url', 'year', 'date')
+site_values = (
+	__YOUR_NAME__, __YOUR_EMAIL__, __YOUR_PHONE__, __YOUR_WEBSITE__, year, date)
 
 # configuration
 class Config(object):
