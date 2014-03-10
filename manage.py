@@ -17,7 +17,7 @@ manager.add_option('-f', '--cfgfile', dest='config_file', type=p.abspath)
 
 
 def make_safe(name):
-	return name.replace(' ', '_').replace('&', 'and').replace('/', '-')
+	return name.replace(' ', '_').replace('&', 'and').replace('/', '-').lower()
 
 def render_app(app, style):
 	"""Renders the markup"""
@@ -35,8 +35,9 @@ def propose(info=None, style=None):
 	app.config['INFO_PATH'] = (info or app.config['INFO_PATH'])
 	stream = file(app.config['INFO_PATH'], 'r')
 	details = yaml.safe_load(stream)
-	client_name = details['client_name']
-	safe_name = make_safe(client_name)
+	client_name = details['short_company_name']
+	projec_name = details['project_name']
+	safe_name = make_safe('%s_%s' % (client_name, projec_name) )
 	html_file = p.join(app.config['EXPORT_DIR'], '%s_proposal.html' % safe_name)
 	content = render_app(app, style)
 
