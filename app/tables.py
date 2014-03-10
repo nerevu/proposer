@@ -9,6 +9,7 @@
 from flask.ext.markdown import Extension
 from markdown.extensions.tables import TableProcessor, etree
 
+
 class BSTableProcessor(TableProcessor):
 	""" Process Tables in a Bootstrap compatible way """
 	def _build_row(self, row, parent, align, border):
@@ -29,6 +30,7 @@ class BSTableProcessor(TableProcessor):
 
 			a = (a or 'left')
 			c.set('style', "text-align: %s;" % a)
+
 
 class TableExtension(Extension):
 	def extendMarkdown(self, md, md_globals):
