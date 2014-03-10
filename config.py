@@ -29,7 +29,7 @@ class Config(object):
 	HOST = '127.0.0.1'
 	EXPORT_DIR = p.join(_basedir, 'exports')
 	INFO_PATH = p.join(_basedir, 'info.yml')
-	STYLE = 'professional'
+	STYLE = 'development'
 	TABLE = '<table class="table table-striped">'
 
 	BOOTSTRAP_USE_MINIFIED = False
