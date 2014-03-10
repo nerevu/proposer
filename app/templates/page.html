@@ -1,9 +1,99 @@
 {% extends "base.html" %}
 
+{% macro projdays() -%}
+	{{ g.timeframe.development.period * g.timeframe.development.days_per_unit }}
+{%- endmacro %}
+
+{% macro pluralize(word, count) -%}
+	{%- if count > 1 -%}
+		{{ count }} {{ word }}s
+	{%- else -%}
+		{{ count }} {{ word }}
+	{%- endif -%}
+{%- endmacro %}
+
+{% macro listize(items) -%}
+	{%- filter lower -%}
+		{%- if items|length > 2 -%}
+			{%- for item in items -%}
+				{%- if not loop.last %}{{ item.name }}, {% else -%}
+					and {{ item.name }}
+				{%- endif -%}
+			{%- endfor -%}
+		{%- elif items|length > 1 -%}
+			{%- for item in items -%}
+				{%- if not loop.last %}{{ item.name }} {% else -%}
+					and {{ item.name }}
+				{%- endif -%}
+			{%- endfor %}
+		{%- else -%}
+			{{ items[0].name }}
+		{%- endif -%}
+	{%- endfilter -%}
+{%- endmacro -%}
+
+
+{% macro listize2(links) -%}
+	{%- if links|length > 1 -%}
+		the following:
+
+{% for l in links -%}
+	* [{{ l.name }}]({{ l.site }})
+{% endfor -%}
+	{%- else -%}
+		{%- filter lower -%}
+			[{{ links[0].name }}]({{ links[0].site }}).
+		{%- endfilter -%}
+	{%- endif -%}
+{%- endmacro -%}
+
+{% macro listize3(items) -%}
+		{%- if items|length > 1 -%}
+			{%- for item in items -%}
+				{%- if not loop.last %}{{ item }} / {% else -%}
+					{{ item }}
+				{%- endif -%}
+			{%- endfor -%}
+		{%- else -%}
+			{{ items[0] }}
+		{%- endif -%}
+{%- endmacro -%}
+
+{% macro filldays(max) -%}
+	{%- for days in [1]|batch(max|int, 1) -%}
+		{%- for day in days -%}
+			|{{ day + loop.index0 }}
+		{%- endfor -%}
+	{%- endfor -%}
+{% endmacro %}
+
+{% macro fillbars(max) %}
+	{%- for days in [1]|batch(max|int, 1) -%}
+		{%- for day in days -%}
+			|-
+		{%- endfor -%}
+	{%- endfor -%}
+{% endmacro %}
+
+{% macro fillsquares(start, duration) %}
+	{%- if start > 1 -%}
+		{%- for days in [1]|batch(start - 1, 1) -%}
+			{%- for day in days -%}
+				|
+			{%- endfor -%}
+		{%- endfor -%}
+	{%- endif -%}
+	{%- for days in [1]|batch(duration, 1) -%}
+		{%- for day in days -%}
+			|⬛
+		{%- endfor -%}
+	{%- endfor -%}
+{% endmacro %}
+
 {% block container_content %}
 <div class="jumbotron">
 	<h1>Project Proposal</h1>
-	<p class="lead">Submitted by {{ g.site.author }} to {{ g.client_name }} on {{ g.site.date }}</p>
+	<p class="lead">Submitted by {{ g.site.author }} to {{ g.full_company_name }} on {{ g.site.date }}</p>
 </div>
 <hr>
 {% block main_content %}{% endblock %}

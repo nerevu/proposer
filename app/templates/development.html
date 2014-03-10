@@ -2,62 +2,6 @@
 {% import "bootstrap_wtf.html" as wtf %}
 {% block main_content %}
 
-{% macro projdays() -%}
-	{{ g.timeframe.development.period * g.timeframe.development.days_per_unit }}
-{%- endmacro %}
-
-{% macro listize(items) -%}
-	{%- filter lower -%}
-		{%- if items|length > 2 -%}
-			{%- for item in items -%}
-				{%- if not loop.last %}{{ item.name }}, {% else -%}
-					and {{ item.name }}
-				{%- endif -%}
-			{%- endfor -%}
-		{%- elif items|length > 1 -%}
-			{%- for item in items -%}
-				{%- if not loop.last %}{{ item.name }} {% else -%}
-					and {{ item.name }}
-				{%- endif -%}
-			{%- endfor %}
-		{%- else -%}
-			{%- for item in items -%}{{ item.name }}{%- endfor %}
-		{%- endif -%}
-	{%- endfilter -%}
-{%- endmacro -%}
-
-{% macro filldays(max) -%}
-	{%- for days in [1]|batch(max|int, 1) -%}
-		{%- for day in days -%}
-			|{{ day + loop.index0 }}
-		{%- endfor -%}
-	{%- endfor -%}
-{% endmacro %}
-
-{% macro fillbars(max) %}
-	{%- for days in [1]|batch(max|int, 1) -%}
-		{%- for day in days -%}
-			|-
-		{%- endfor -%}
-	{%- endfor -%}
-{% endmacro %}
-
-{% macro fillsquares(start, duration) %}
-	{%- if start > 1 -%}
-		{%- for days in [1]|batch(start - 1, 1) -%}
-			{%- for day in days -%}
-				|
-			{%- endfor -%}
-		{%- endfor -%}
-	{%- endif -%}
-	{%- for days in [1]|batch(duration, 1) -%}
-		{%- for day in days -%}
-			|⬛
-		{%- endfor -%}
-	{%- endfor -%}
-{% endmacro %}
-
-
 <div class="row">
 	<div class="span12">
 
@@ -158,7 +102,7 @@ Category | Details
 ---------|---------
 Development Period|{{ g.timeframe.development.period }} {{ g.timeframe.development.units }}s
 Pricing Structure|{{ g.pricing }}
-Support|{{ g.support_timeframe }} via IM/email
+Support|{{ g.timeframe.support.period }} {{ g.timeframe.support.units }}s {{ g.timeframe.support.methods }}
 Warranty|{{ g.timeframe.warranty.period }} {{ g.timeframe.warranty.units }}s
 
 ### Technical specifications
@@ -244,7 +188,7 @@ The final fee will be a total of the estimate and accrued pre-approved project e
 
 ### Timing and Mode of Payments
 
-Payments should be made with 24 hrs of each milestone completion outlined in *Project schedule* above. If I do not receive payment in the time indicated, I will postpone {{ g.project_name }} until I receive payment. Additionally, I will charge a late payment fee of $10 per week.
+Payments should be made within 24 hrs of each milestone completion outlined in *Project schedule* above. If I do not receive payment in the time indicated, I will postpone {{ g.project_name }} until I receive payment. Additionally, I will charge a late payment fee of $10 per week.
 
 ### Validity
 

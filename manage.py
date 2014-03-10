@@ -28,7 +28,7 @@ def render_app(app, style):
 
 
 @manager.option('-i', '--info', help='the client info file, defaults to info.yml')
-@manager.option('-s', '--style', help='the proposal style, defaults to professional.md')
+@manager.option('-s', '--style', help='the proposal style, defaults to development')
 def propose(info=None, style=None):
 	"""Create Proposal"""
 	style = (style or app.config['STYLE'])
