@@ -11,7 +11,7 @@ __APP_NAME__ = 'Proposer'
 __YOUR_NAME__ = 'Reuben Cummings'
 __YOUR_EMAIL__ = '%s@gmail.com' % _user
 __YOUR_PHONE__ = ['0789-477-319', '0756-477-319']
-__YOUR_WEBSITE__ = 'http://%s.github.com' % _user
+__YOUR_WEBSITE__ = 'http://%s.github.io' % _user
 
 # calculated vars
 app = __APP_NAME__.lower()
