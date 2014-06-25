@@ -55,7 +55,7 @@ The following examples assume you have first run `cd path/to/downloads/proposer`
 
 *Use a custom template style*
 
-	./manage.py propose -s professional
+	./manage.py propose -s research
 
 *Use a custom yaml file (you can drag and drop the file into the terminal instead of typing in the path)*
 
