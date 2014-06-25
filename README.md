@@ -1,6 +1,6 @@
 # proposer
 
-![Image](../blob/master/examples/company_super_awesome_project_proposal.png?raw=true)
+![Image](../master/examples/company_super_awesome_project_proposal.png?raw=true)
 
 ## Introduction
 
