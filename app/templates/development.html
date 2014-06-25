@@ -20,11 +20,15 @@
 
 I propose that you ({{ g.full_company_name }}) hire me ({{ g.site.author }}) to
 {{ g.project_goal }} within {{ g.timeframe.development.period }}
-{{ g.timeframe.development.units }}s for **{{ g.project_estimate }}
+{{ g.timeframe.development.units }}s for **{{ g.project_estimate_low }} to {{ g.project_estimate_high }}
 {{ g.currency }}**. Upon completion of the project (hereafter referred to as
 {{ g.project_name }}), I will deliver {{ listize(g.deliverables) }}.
 The features {{ g.project_name }} will have are {{ listize(g.features) }}.
-Additionally, I shall perform the services of {{ listize(g.services) }}.
+{%- if not g.services == None -%}Additionally, I shall perform the services of
+{{ listize(g.services) }}.{%- endif %}
+
+{% if g.missing -%}Unfotunately, this proposal does not include the following requested features:
+{{ listize(g.missing) }}.{%- endif %}
 
 ### Points of Contact
 
@@ -51,13 +55,14 @@ Upon the completion of {{ g.project_name }}, I will deliver the following items:
 * **{{ feature.name }}**: {{ feature.desc }}
 {% endfor %}
 
+{%- if not g.services == None %}
 #### Services
 
 I will perform the following services regarding {{ g.project_name }}:
 
 {% for service in g.services %}
 * **{{ service.name }}**: {{ service.desc }}
-{% endfor %}
+{% endfor %}{%- endif %}
 
 ## Relevant Skills/Experience
 
@@ -65,9 +70,10 @@ I will perform the following services regarding {{ g.project_name }}:
 
 I have extensive experience in the following areas related to {{ g.project_name }}:
 
-|{% for i in g.experience %}{{ i.topic }}|{% endfor %}
-|{% for i in g.experience %}:-------------:|{% endfor %}
-|{% for i in g.experience %}{% for e in i.entries %}{{ e }}<br>{% endfor %}|{% endfor %}
+Area | Example(s)
+-----|-----------
+{% for i in g.experience %}{{ i.topic }}|{% for e in i.entries %}[{{ e.name }}]({{ e.site }}){% endfor %}
+{% endfor %}
 
 Should you wish to see more information about my background, please view the following:
 
@@ -83,7 +89,7 @@ Should you wish to see more information about my background, please view the fol
 
 #### Project Estimate
 
-The estimated cost for completing {{ g.project_name }} is **{{ g.project_estimate }}
+The estimated cost for completing {{ g.project_name }} is **{{ g.project_estimate_low }} to {{ g.project_estimate_high }}
 {{ g.currency }}** and includes the following phases:
 
 {% for i in g.schedule %}
@@ -91,7 +97,7 @@ The estimated cost for completing {{ g.project_name }} is **{{ g.project_estimat
 {% endfor %}
 
 If you are not happy with my work at the end of any phase, you will pay in full
-for all of the completed work (outlined in *Project schedule* below) and are
+for all of the completed work (outlined in [Project schedule](#project-schedule-weeks-1-5)) and are
 free to cancel the remainder of the contract. If at any time you want to add
 extra functionality (Add-ons), you can commission me to make the necessary
 revisions at the hourly rate of {{ g.hourly_rate }} {{ g.currency }}.
@@ -100,10 +106,10 @@ revisions at the hourly rate of {{ g.hourly_rate }} {{ g.currency }}.
 
 Category | Details
 ---------|---------
-Development Period|{{ g.timeframe.development.period }} {{ g.timeframe.development.units }}s
+Development Period|{{ pluralize(g.timeframe.development.units, g.timeframe.development.period) }}
 Pricing Structure|{{ g.pricing }}
-Support|{{ g.timeframe.support.period }} {{ g.timeframe.support.units }}s {{ g.timeframe.support.methods }}
-Warranty|{{ g.timeframe.warranty.period }} {{ g.timeframe.warranty.units }}s
+Support|{{ pluralize(g.timeframe.support.units, g.timeframe.support.period) }} {{ g.timeframe.support.methods }}
+Warranty|{{ pluralize(g.timeframe.warranty.units, g.timeframe.warranty.period) }}
 
 ### Technical specifications
 
@@ -144,7 +150,9 @@ Phase | Milestone | Due at Completion ({{ g.currency }}) | Duration ({{ g.timefr
 {% endfor %}
 {% endif %}
 
-{{ '`Warning, payments do not equal quote!`' if g.schedule|sum(attribute='payment') != g.project_estimate }}
+{% if g.schedule|sum(attribute='payment') != g.project_estimate_ave %}
+`Warning, payments of {{ g.schedule|sum(attribute='payment')}} do not equal quote of {{g.project_estimate_ave}}!`
+{% endif %}
 
 {{ '`Warning, durations do not equal timeframe!`' if g.schedule|sum(attribute='duration') != projdays()|int }}
 
@@ -162,16 +170,16 @@ Feature{% for i in g.schedule %}{% if i.is_release %}|{{ i.milestone }}{% endif 
 ### From Me
 
 1. Timely submission of documents and deliverables (both final and revisions) as per schedule.
-1. Advance notification of non-availability (24 hours notice).
+1. Advance notification of non-availability (24 hours).
 1. Advance notification if scheduled deliverable or milestone will be delayed with reasons for the delay and the mitigating steps I will take (within 12 hours of identification).
-1. Advance notification of documents and deliverables that require your review (12 hours notice).
+1. Advance notification of documents and deliverables that require your review (12 hours).
 
 ### From You
 
-1. Access to necessary software, hardware, and other resources necessary for completion of deliverables.
+1. Access to software, hardware, and other resources necessary for completion of deliverables.
 1. Advance notification of preferred timelines for a deliverable or milestone in case proposed timelines are not convenient (prior to beginning {{ g.project_name }}).
 1. Timely review of documents and deliverables and feedback or suggestions for changes (24 hours).
-1. Advance notification of non-availability (24 hours notice).
+1. Advance notification of non-availability (24 hours).
 1. Formal Approval of all deliverables.
 
 ## Terms and Conditions
@@ -188,7 +196,7 @@ The final fee will be a total of the estimate and accrued pre-approved project e
 
 ### Timing and Mode of Payments
 
-Payments should be made within 24 hrs of each milestone completion outlined in *Project schedule* above. If I do not receive payment in the time indicated, I will postpone {{ g.project_name }} until I receive payment. Additionally, I will charge a late payment fee of $10 per week.
+Payments should be made within 24 hrs of each milestone completion outlined in [Project schedule](#project-schedule-weeks-1-5). If I do not receive payment in the time indicated, I will postpone {{ g.project_name }} until I receive payment. Additionally, I will charge a late payment fee of {{ g.timeframe.development.late_payment_penalty }} {{ g.currency }} per week.
 
 ### Validity
 
@@ -208,7 +216,11 @@ Upon receiving your final payment, I will assign copyright to you as follows:
 
 * You will own the application binary, documentation, graphics, and other visual elements created for you.
 * You will also own text, photographs, and other data you provide, unless someone else owns them.
-* I will own {{ g.project_name }}'s source code and distribute it to you under the terms of the [{{ g.license.name }} License]({{ g.license.site }}).
+* I will distribute {{ g.project_name }}'s source code to you under the terms of {% if g.license -%}
+ the [{{ g.license.name }} License]({{ g.license.site }}).
+{%- else -%}
+ the most permissible open source license allowed.
+{%- endif %}
 * I reserve the right to use any libraries or modules developed for
 {{ g.project_name }} in future work.
 * I also reserve the right to use screen-shots from the completed application (with all your data removed) as part of my portfolio and to write about {{ g.project_name }} online or in print in a general nature.
