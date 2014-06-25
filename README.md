@@ -1,5 +1,7 @@
 # proposer
 
+![Image](../blob/master/examples/company_super_awesome_project_proposal.png?raw=true)
+
 ## Introduction
 
 Proposer is a [Flask](http://flask.pocoo.org) powered script that automatically generates html proposals from [yaml data files](http://en.wikipedia.org/wiki/YAML#Examples). It has been tested on the following configuration:
