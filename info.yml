@@ -1,0 +1,192 @@
+# ----------------------- #
+#      Main Configs       #
+# ----------------------- #
+# Client
+client_name: Some client
+client_email: client@fake.com
+client_phone: 555-5555
+full_company_name: Company, Inc.
+short_company_name: Company
+
+# Project
+project_name: Super Awesome Project
+project_goal: develop a super awesome search widget
+project_num: 123456
+
+deliverables:
+- name: Search API
+  desc: JSON-REST API backend powering the searches
+- name: Search Widget
+  desc: White labeled search widget
+- name: Logging API
+  desc: JSON-REST API containing widget usage details
+- name: Widget Manager
+  desc: web application allowing users to create widgets and edit settings, e.g., [rome2rio](https://free-dashboard.rome2rio.com/Brand)
+
+missing:
+- name: facebook login integration
+- name: ad integration
+- name: relevant content integration
+
+features:
+- id: 1
+  name: Backend conversion
+  desc: conversion of the current backend to a RESTful API
+- id: 2
+  name: Result filters
+  desc: rank results by specified categories
+- id: 3
+  name: User authentication
+  desc: allows user access to the APIs
+- id: 4
+  name: Stand-alone Widget
+  desc: demo widget
+- id: 5
+  name: Widget usage logging
+  desc: log user uage details (destinations clicked, filters used...)
+- id: 6
+  name: Widget embedding
+  desc: modular widget to be used on other sites
+- id: 7
+  name: Widget customization
+  desc: allow custom css styling
+- id: 8
+  name: Widget management
+  desc: allows for widget creation and editing
+
+services:
+
+platform:
+  development:
+    hardware: Macbook Pro
+    os: OSX 10.7.5
+  production:
+    hardware: Heroku Cloud Server
+    os: Ubuntu Linux
+
+technology:
+- category: Search API Database
+  type: Postgres
+  language: Python
+  framework: Flask
+- category: Logging API Database
+  type: Postgres
+  language: Python
+  framework: Flask
+- category: White Label Widget
+  type: Responsive Web Application
+  language: Javascript/HTML/CSS
+  framework: Backbone/Chaplin
+- category: Widget Manager Database
+  type: Postgres
+  language: Python
+  framework: Flask
+- category: Widget Manager Frontend
+  type: Responsive Web Application
+  language: Python/Javascript/HTML/CSS
+  framework: Flask
+- category: Flask Web Servers
+  type: Gunicorn w/ gevent
+  language: Python
+  framework: N/A
+- category: Chaplin Web Server
+  type: Express.js
+  language: Javascript
+  framework: Node.js
+
+license:
+
+project_estimate_ave: 4500
+project_estimate_high: 5000
+project_estimate_low: 4000
+pricing: Range # Fixed, Range or Hourly
+hourly_rate: 50
+currency: USD
+days_valid: 7
+
+timeframe:
+  development:
+    period: 5
+    units: week
+    days_per_unit: 5
+    late_payment_penalty: 25
+    unit_penalty: 50
+    max_penalty: 200
+  milestones:
+    units: business day
+  support:
+    period: 1
+    units: week
+    methods: phone/IM/email
+  warranty:
+    period: 4
+    units: week
+
+# ----------------------- #
+#      Schedule Configs   #
+# ----------------------- #
+schedule:
+- phase: Research
+  description: review current codebase, database structure, and requirements
+  milestone: Refined estimate
+  is_release: false
+  start: 1
+  duration: 1
+  payment: 0
+- phase: Alpha
+  description: complete search api
+  milestone: Alpha Release
+  is_release: true
+  start: 2
+  duration: 5
+  payment: 1000
+  features: {1: true, 2: true, 3: true}
+- phase: Beta
+  description: complete widget demo
+  milestone: Beta Release
+  is_release: true
+  start: 7
+  duration: 10
+  payment: 1500
+  features: {1: true, 2: true, 3: true, 4: true}
+- phase: Candidate
+  description: complete widget usage logging
+  milestone: Candidate Release
+  is_release: true
+  start: 17
+  duration: 2
+  payment: 400
+  features: {1: true, 2: true, 3: true, 4: true, 5: true}
+- phase: Embedding
+  description: embed widget
+  milestone: Embedded Release
+  is_release: true
+  start: 19
+  duration: 2
+  payment: 250
+  features: {1: true, 2: true, 3: true, 4: true, 5: true, 6: true}
+- phase: Finalization
+  description: complete widget manager
+  milestone: Final Release
+  is_release: true
+  start: 21
+  duration: 5
+  payment: 1150
+  features: {1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true, 8: true}
+
+# ----------------------- #
+#      Misc Configs       #
+# ----------------------- #
+links:
+- name: My Project Portfolio
+  site: http://reubano.github.io/#portfolio
+- name: My LinkedIn Profile
+  site: https://www.linkedin.com/in/reubano
+
+experience:
+- topic: REST API creation
+  entries: [{name: Prometheus API, site: 'http://prometheus.herokuapp.com/api'}]
+- topic: Responsive Web application development
+  entries: [{name: Tophubbers, site: 'http://tophubbers.herokuapp.com'}]
+- topic: User activity logging
+  entries: [{name: Flogger, site: 'http://flogger.herokuapp.com/api/logs'}]

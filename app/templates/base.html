@@ -1,15 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>{% block title %}{% endblock %}</title>
-  {%- block styles %}{% endblock %}
-  {%- block priority_scripts %}{% endblock %}
-</head>
-<body>
-  <div class="page">
-    {% block page %}{% endblock %}
-  </div>
-  {%- block scripts %}{% endblock %}
-</body>
-</html>
+{% extends "bootstrap_responsive.html" %}
+
+{% block style %}
+	{%- if styles %}
+		<style>
+			body {padding-top: 60px;}
+			{% for style in styles -%}
+			{{ style|safe }}
+			{% endfor -%}
+		</style>
+	{% else -%}
+		{{super()}}
+	{% endif -%}
+	{%- if to_print %}
+		<style>
+/* 			.container {width: 744px;} */
+
+			@page {size: A5; margin: 1cm}
+			@media print {nav {display: none}}
+		</style>
+	{% endif -%}
+{%- endblock %}
+
+{% block body_content %}
+
+	<div class="container">
+		{% block container_content %}{% endblock container_content %}
+		<hr>
+		<footer>{% include 'footer.html' %}</footer>
+	</div><!-- /container -->
+{% endblock body_content %}

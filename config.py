@@ -1,43 +1,53 @@
 import os
-import yaml
 from os import path as p
 from datetime import date as d
 
 # module vars
 _basedir = p.dirname(__file__)
 _user = os.environ.get('USER', os.environ.get('USERNAME'))
-signature = '''
 
-Kind regards
+# configurable vars
+__APP_NAME__ = 'Proposer'
+__YOUR_NAME__ = 'Reuben Cummings'
+__YOUR_EMAIL__ = '%s@gmail.com' % _user
+__YOUR_PHONE__ = ['0789-477-319', '0756-477-319']
+__YOUR_WEBSITE__ = 'http://%s.github.io' % _user
 
-Sarah Stocks
-South West Marketing | Moorland View | Wembury Road | Plymouth | Devon | PL9 0DQ
-Tel: 01752 863 400
-www.southwest-marketing.co.uk
-'''
+# calculated vars
+app = __APP_NAME__.lower()
+year = d.today().strftime("%Y")
+date = d.today().strftime("%B %d, %Y")
+site_keys = ('author', 'author_email', 'author_phone', 'author_url', 'year', 'date')
+site_values = (
+	__YOUR_NAME__, __YOUR_EMAIL__, __YOUR_PHONE__, __YOUR_WEBSITE__, year, date)
 
 # configuration
 class Config(object):
-	SIGNATURE = signature
-	CLIENT_DATA_FILE = p.join(_basedir, 'clients.yml')
-	stream = file(CLIENT_DATA_FILE, 'r')
-	CLIENT_DATA = yaml.safe_load(stream)
-	MAIL_SCRIPT = p.join(_basedir, 'macmailto.sh')
-	SWM_PATH = p.join(_basedir, 'sources', 'swm.csv')
-	EXPORT_DIR = p.join(_basedir, 'exports')
-	STYLE_CACHE_DIRECTORY = p.join(_basedir, 'app', 'static')
-	EMAIL = False
+	SITE = dict(zip(site_keys, site_values))
 	DEBUG = False
-	DEBUG_GRIP = False
-	STYLE_URLS = []
-	STYLE_URLS_SOURCE = 'https://github.com/joeyespo/grip'
-	STYLE_URLS_RE = '<link.+href=[\'"]?([^\'" >]+)[\'"]?.+media=[\'"]?(?:screen|all)[\'"]?.+rel=[\'"]?stylesheet[\'"]?.+/>'
+	TESTING = False
+	HOST = '127.0.0.1'
+	EXPORT_DIR = p.join(_basedir, 'exports')
+	INFO_PATH = p.join(_basedir, 'info.yml')
+	STYLE = 'development'
+	TABLE = '<table class="table table-striped">'
+
+	BOOTSTRAP_USE_MINIFIED = False
+	BOOTSTRAP_USE_CDN = False
+	BOOTSTRAP_FONTAWESOME = False
+	BOOTSTRAP_HTML5_SHIM = False
 
 
 class Production(Config):
-	EMAIL = True
+	HOST = '0.0.0.0'
+	BOOTSTRAP_USE_MINIFIED = True
+	BOOTSTRAP_USE_CDN = True
+	BOOTSTRAP_FONTAWESOME = True
 
 
 class Development(Config):
 	DEBUG = True
-	DEBUG_GRIP = True
+
+
+class Test(Config):
+	TESTING = True

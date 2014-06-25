@@ -1,0 +1,200 @@
+{% extends "page.html" %}
+{% import "bootstrap_wtf.html" as wtf %}
+{% block main_content %}
+
+<div class="row">
+	<div class="span12">{% filter markdown %}
+## Table of Contents
+
+- - -
+
+[TOC]
+
+## Project Summary
+
+- - -
+
+### Overview
+
+I propose that you ({{ g.full_company_name }}) hire me ({{ g.site.author }}) to
+{{ g.project_goal }} within {{ pluralize(g.timeframe.development.units, g.timeframe.development.period) }} for **{{ g.project_estimate }}
+{{ g.currency }}**. Upon completion of the project (hereafter referred to as
+{{ g.project_name }}), I will deliver {{ listize(g.deliverables) }}.
+The sections {{ g.project_name }} will consist of are {{ listize(g.features) }}.
+
+{%- if not g.services == None -%}Additionally, I shall perform the services of {{ listize(g.services) }}.{%- endif %}
+
+### Points of Contact
+
+Company | Name | Email | Phone
+--------|------|-------|------
+{{ g.short_company_name }} | {{ g.client_name }} | [{{ g.client_email }}](mailto:{{ g.client_email }}?Subject={{ g.project_name }}) | {{ g.client_phone }}
+Freelancer | {{ g.site.author }} | [{{ g.site.author_email }}](mailto:{{ g.site.author_email }}?Subject={{ g.project_name }}) | {{ listize3(g.site.author_phone) }}
+
+### Objectives
+
+#### Deliverables
+
+Upon the completion of {{ g.project_name }}, I will deliver the following items:
+
+{% for deliverable in g.deliverables %}
+* **{{ deliverable.name }}**: {{ deliverable.desc }}
+{% endfor %}
+
+#### Sections
+
+{{ g.project_name }} will have the following sections:
+
+{% for feature in g.features %}
+* **{{ feature.name }}**: {{ feature.desc }}
+{% endfor %}
+
+{%- if not g.services == None -%}
+#### Services
+
+I will perform the following services regarding {{ g.project_name }}:
+
+{% for service in g.services %}
+* **{{ service.name }}**: {{ service.desc }}
+{% endfor %}
+{%- endif -%}
+
+## Relevant Skills/Experience
+
+- - -
+
+Should you wish to see more information about my background, please view {{ listize2(g.links) }}
+
+## Scope of Work
+
+- - -
+
+### Project Details
+
+#### Project Estimate
+
+The estimated cost for completing {{ g.project_name }} is **{{ g.project_estimate }}
+{{ g.currency }}** and includes the following phases:
+
+{% for i in g.schedule %}
+* **{{ i.phase }}**: {{ i.description }}
+{% endfor %}
+
+If you are not happy with my work at the end of any phase, you will pay in full
+for all of the completed work (outlined in [Project schedule](#project-schedule-weeks-1-2)) and are
+free to cancel the remainder of the contract. If at any time you want to add
+extra deliverables (Add-ons), you can commission me to make the necessary
+revisions at the hourly rate of {{ g.hourly_rate }} {{ g.currency }}.
+
+#### Project Structure
+
+Category | Details
+---------|---------
+Development Period|{{ g.timeframe.development.period }} {{ g.timeframe.development.units }}s
+Pricing Structure|{{ g.pricing }}
+Support|{{ pluralize(g.timeframe.support.units, g.timeframe.support.period) }} {{ g.timeframe.support.methods }}
+
+### Scheduling
+
+#### Project schedule ({{ g.timeframe.development.units }}s 1 - {{ g.timeframe.development.period }})
+
+{% if projdays()|int > 20 %}
+Phase | Milestone | Due at Completion ({{ g.currency }})
+------|-----------|------------------------------------:
+{% for i in g.schedule %}{{ i.phase }}|{{ i.milestone }}|{{ i.payment }}
+{% endfor %}
+
+Phase | Duration ({{ g.timeframe.milestones.units }}s){{ filldays(projdays()) }}
+------|----------------------------------------------:{{ fillbars(projdays()) }}
+{% for i in g.schedule %}{{ i.phase }}|{{ i.duration }}{{ fillsquares(i.start, i.duration) }}
+{% endfor %}
+
+{% else %}
+Phase | Milestone | Due at Completion ({{ g.currency }}) | Duration ({{ g.timeframe.milestones.units }}s){{ filldays(projdays()) }}
+------|-----------|-------------------------------------:|----------------------------------------------:{{ fillbars(projdays()) }}
+{% for i in g.schedule %}{{ i.phase }}|{{ i.milestone }}|{{ i.payment }}|{{ i.duration }}{{ fillsquares(i.start, i.duration) }}
+{% endfor %}
+{% endif %}
+
+{{ '`Warning, payments do not equal quote!`' if g.schedule|sum(attribute='payment') != g.project_estimate }}
+
+{{ '`Warning, durations do not equal timeframe!`' if g.schedule|sum(attribute='duration') != projdays()|int }}
+
+#### Milestone Comparison
+
+Feature{% for i in g.schedule %}{% if i.is_release %}|{{ i.milestone }}{% endif %}{% endfor %}
+--------{% for i in g.schedule %}{% if i.is_release %}|:-------:{% endif %}{% endfor %}
+{% for f in g.features %}{{ f.name }}{% for i in g.schedule %}{% if i.is_release %}{% if i.features[f.id] %}|✅{% else %}|{% endif %}{% endif %}{% endfor %}
+{% endfor %}
+
+## Expectations
+
+- - -
+
+### From Me
+
+1. Timely submission of documents and deliverables (both final and revisions) as per schedule.
+1. Advance notification of non-availability (24 hours notice).
+1. Advance notification if scheduled deliverable or milestone will be delayed with reasons for the delay and the mitigating steps I will take (within 12 hours of identification).
+1. Advance notification of documents and deliverables that require your review (12 hours notice).
+
+### From You
+
+1. Access to necessary software, hardware, and other resources necessary for completion of deliverables.
+1. Advance notification of preferred timelines for a deliverable or milestone in case proposed timelines are not convenient (prior to beginning {{ g.project_name }}).
+1. Timely review of documents and deliverables and feedback or suggestions for changes (24 hours).
+1. Advance notification of non-availability (24 hours notice).
+1. Formal Approval of all deliverables.
+
+## Terms and Conditions
+
+- - -
+
+### Late Penalty
+
+If I have not completed the last milestone by the end of {{ g.timeframe.development.units }} {{ g.timeframe.development.period }}, I will deduct {{ g.timeframe.development.unit_penalty }} {{ g.currency }} from the total amount owed for each additional {{ g.timeframe.development.units }} it takes to complete the milestone (up to a maximum of {{ g.timeframe.development.max_penalty }} {{ g.currency }}). This does not include delays caused by late payments or time spent waiting for you to deliver requested data or information.
+
+### Project Fee Calculation
+
+The final fee will be a total of the estimate and accrued pre-approved project expenses minus late penalty (if any). Add-ons are billed in 15 minute increments and have a 1 hour minimum. The amount due on the final invoice will be the final fee minus all previous payments.
+
+### Timing and Mode of Payments
+
+Payments should be made within 24 hrs of each milestone completion outlined in [Project schedule](#project-schedule-weeks-1-2) via [Paypal](https://www.paypal.com/us/cgi-bin/webscr?cmd=%5fsend%2dmoney&nav=1) to {{ g.site.author_email }}. If I do not receive payment in the time indicated, I will postpone {{ g.project_name }} until I receive payment. Additionally, I will charge a late payment fee of $10 per week.
+
+### Validity
+
+This proposal is valid until {{ g.valid_until }}.
+
+### Force Majeure
+
+I am not responsible for delays caused by acts of nature or any other reason beyond my reasonable control.
+
+##	Relationship
+
+You acknowledge and agree that the services performed by me, my agents, or sub-contractors shall be as an independent contractor and that nothing in this proposal shall be deemed to constitute a partnership, joint venture, agency relationship, or otherwise between you and I.
+
+### Intellectual Property Rights
+
+Upon receiving your final payment, I will assign copyright to you as follows:
+
+* You will own the spreadsheets, documentation, graphics, and other visual elements created for you.
+* You will also own text, photographs, and other data you provide, unless someone else owns them.
+
+### Non Disclosure & Confidentiality
+
+The contents of this proposal should not be shown, read, or otherwise disclosed to any
+third party who is not a current employee of {{ g.short_company_name }} without my written consent.
+
+In the course of completing {{ g.project_name }}, you recognize that I may come in contact or become familiar with information which you or your affiliates may consider proprietary. I agree to keep all such information confidential and not to discuss or divulge it to anyone other than appropriate personnel or designees of {{ g.short_company_name }}.
+
+### Termination of Agreement
+
+In the event of an unforeseen situation preventing a continuation of this agreement,
+either of us may terminate this agreement on thirty (30) days written notice.
+In the event of the termination of this agreement, appropriate payments will be
+settled as per efforts completed.
+    {% endfilter %}</div>
+</div>
+{% endblock main_content %}
+

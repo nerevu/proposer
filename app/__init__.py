@@ -4,26 +4,41 @@
 	~~~~~~~~~~~~~~
 
 	Provides the flask application
-
-Modified from GRIP https://github.com/joeyespo/grip
 """
 
-import os
-import re
-import config
-import requests
+from __future__ import print_function
 
-from urlparse import urlparse
-from traceback import format_exc
-from flask import Flask, url_for, send_from_directory
-from .renderer import render_page
+import config
+import yaml
+
+from flask import Flask, g, render_template, url_for, Response
+from flask.ext.bootstrap import Bootstrap
+from flask.ext.markdown import Markdown
+from flask_weasyprint import HTML, render_pdf
+from weasyprint.css import find_stylesheets
+from app.tables import TableExtension
+from datetime import timedelta, date as d
+
+def _get_styles(app, style_urls):
+	"""Gets the content of the given list of style URLs."""
+	styles = []
+	for style_url in style_urls:
+		with app.test_client() as c:
+			response = c.get(style_url)
+		styles.append(response.data)
+	return styles
 
 
 def create_app(config_mode=None, config_file=None):
-	"""Starts a server to render the specified file or directory containing a README."""
+	"""Create webapp instance"""
 
 	# Flask application
 	app = Flask(__name__)
+	Bootstrap(app)
+	md = Markdown(app, extensions=['toc'])
+	md.register_extension(TableExtension)
+
+
 	if config_mode:
 		app.config.from_object(getattr(config, config_mode))
 	elif config_file:
@@ -31,103 +46,44 @@ def create_app(config_mode=None, config_file=None):
 	else:
 		app.config.from_envvar('APP_SETTINGS', silent=True)
 
-	# Setup style cache
-	style_cache_path = app.config['STYLE_CACHE_DIRECTORY']
-	# Get initial styles
-	style_urls = list(app.config['STYLE_URLS'] or [])
-	styles = []
+	table = app.config['TABLE']
 
-	# Get styles from style source
-	@app.before_first_request
-	def retrieve_styles():
-		"""Retrieves the style URLs from the source and caches them, if requested."""
-
-		# Get style URLs from the source HTML page
-		retrieved_urls = _get_style_urls(
-			app.config['STYLE_URLS_SOURCE'], app.config['STYLE_URLS_RE'],
-			style_cache_path, app.config['DEBUG_GRIP'])
-
-		style_urls.extend(retrieved_urls)
-		styles.extend(_get_styles(app, style_urls))
-		style_urls[:] = []
+	@app.before_request
+	def before_request():
+		# set g variables
+		stream = file(app.config['INFO_PATH'], 'r')
+		[g.__setattr__(i[0], i[1]) for i in yaml.safe_load(stream).items()]
+		g.site = app.config['SITE']
+		g.valid_until = (d.today() + timedelta(days=g.days_valid)).strftime(
+			"%B %d, %Y")
 
 	# Views
-	@app.route('/')
-	def render():
-		md = app.config['MD']
-		report = app.config['REPORT']
-		return render_page(md, report, style_urls, styles)
+	@app.route('/<style>/')
+	def index(style):
+		return render_template('%s.html' % style).replace('<table>', table)
 
-	@app.route('/cache/<path:filename>')
-	def render_cache(filename=None):
-		return send_from_directory(style_cache_path, filename)
+	@app.route('/render/<style>/')
+	@app.route('/render/<style>/<type>/')
+	def render(style, type='html'):
+		if type.startswith('html'):
+			html = render_template('%s.html' % style).replace('<table>', table)
+			html_doc = HTML(string=html)
+			stylesheets = find_stylesheets(
+				html_doc.root_element, html_doc.media_type, html_doc.url_fetcher)
+			urls = [sheet.base_url for sheet in stylesheets]
+			style_urls = filter(lambda x: x.endswith('css'), urls)
+			styles = _get_styles(app, style_urls)
+			kwargs = {'styles': styles}
+			return render_template('%s.html' % style, **kwargs).replace('<table>', table)
+		elif type.startswith('pdf'):
+			kwargs = {'to_print': True}
+			return render_pdf(url_for('index', style=style))
+		elif type.startswith('png'):
+			kwargs = {'to_print': True}
+			html = render_template('%s.html' % style, **kwargs).replace('<table>', table)
+			html_doc = HTML(string=html)
+			return Response(html_doc.write_png(), mimetype='image/png')
+		else:
+			pass
 
 	return app
-
-def _get_style_urls(source_url, pattern, style_cache_path, debug=False):
-	"""Gets the specified resource and parses all style URLs in the form of the specified pattern."""
-	try:
-		# TODO: Add option to clear the cached styles
-		# Skip fetching styles if there's any already cached
-		if style_cache_path:
-			cached = _get_cached_style_urls(style_cache_path)
-			if cached:
-				return cached
-
-		# Find style URLs
-		r = requests.get(source_url)
-		if not 200 <= r.status_code < 300:
-			print ' * Warning: retrieving styles gave status code', r.status_code
-		urls = re.findall(pattern, r.text)
-
-		# Cache the styles
-		if style_cache_path:
-			_cache_contents(urls, style_cache_path)
-			urls = _get_cached_style_urls(style_cache_path)
-
-		return urls
-	except Exception as ex:
-		if debug:
-			print format_exc()
-		else:
-			print ' * Error: could not retrieve styles:', str(ex)
-		return []
-
-
-def _get_styles(app, style_urls):
-	"""Gets the content of the given list of style URLs."""
-	styles = []
-	for style_url in style_urls:
-		if not urlparse(style_urls[0]).netloc:
-			with app.test_client() as c:
-				response = c.get(style_url)
-				encoding = response.charset
-				content = response.data.decode(encoding)
-		else:
-			content = requests.get(style_url).text
-		styles.append(content)
-	return styles
-
-
-def _get_cached_style_urls(style_cache_path):
-	"""Gets the URLs of the cached styles."""
-	files = os.listdir(style_cache_path)
-	cached_styles = filter(lambda x: x.endswith('css'), files)
-	return [url_for('render_cache', filename=style) for style in cached_styles]
-
-
-
-def _write_file(filename, contents):
-	"""Creates the specified file and writes the given contents to it."""
-	with open(filename, 'w') as f:
-		f.write(contents.encode('utf-8'))
-
-
-def _cache_contents(urls, style_cache_path):
-	"""Fetches the given URLs and caches their contents in the given directory."""
-	for url in urls:
-		basename = url.rsplit('/', 1)[-1]
-		filename = os.path.join(style_cache_path, basename)
-		contents = requests.get(url).text
-		_write_file(filename, contents)
-		print ' * Downloaded', url
