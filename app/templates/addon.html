@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block container_content %}
+	<div class="row">
+		<div class="span12">
+		{% filter markdown %}
+			{% include "summary.html" %}
+		{% endfilter %}
+		</div>
+	</div>
+{% endblock container_content %}

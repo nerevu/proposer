@@ -1,7 +1,23 @@
-{% extends "base.html" %}
-
 {% macro projdays() -%}
 	{{ g.timeframe.development.period * g.timeframe.development.days_per_unit }}
+{%- endmacro %}
+
+{% macro projcost() -%}
+	{% if g.project_estimate_low and g.project_estimate_high -%}
+		{{ g.project_estimate_low }} to {{ g.project_estimate_high }}
+	{%- else -%}
+		{{ g.project_estimate_ave }}
+	{%- endif %}
+{%- endmacro %}
+
+{% macro compname() -%}
+	{% if g.full_company_name -%}
+		{{ g.full_company_name }}
+	{%- elif g.short_company_name -%}
+		{{ g.short_company_name }}
+	{%- else -%}
+		{{ g.client_name }}
+	{%- endif -%}
 {%- endmacro %}
 
 {% macro pluralize(word, count) -%}
@@ -89,12 +105,3 @@
 		{%- endfor -%}
 	{%- endfor -%}
 {% endmacro %}
-
-{% block container_content %}
-<div class="jumbotron">
-	<h1>Project Proposal</h1>
-	<p class="lead">Submitted by {{ g.site.author }} to {{ g.full_company_name }} on {{ g.site.date }}</p>
-</div>
-<hr>
-{% block main_content %}{% endblock %}
-{% endblock container_content %}

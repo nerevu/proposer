@@ -1,0 +1,16 @@
+{% import "macros.html"  as macros %}
+
+## Relevant Skills/Experience
+
+- - -
+
+{% if g.experience %}
+I have extensive experience in the following areas related to {{ g.project_name }}:
+
+Area | Example(s)
+-----|-----------
+{% for i in g.experience %}{{ i.topic }}|{% for e in i.entries %}[{{ e.name }}]({{ e.site }}){% endfor %}
+{% endfor %}
+{%- endif %}
+
+Should you wish to see more information about my background, please view {{ macros.listize2(g.links) }}
