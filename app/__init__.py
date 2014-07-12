@@ -64,9 +64,9 @@ def create_app(config_mode=None, config_file=None):
 		return render_template('%s.html' % style).replace('<table>', table)
 
 	@app.route('/render/<style>/')
-	@app.route('/render/<style>/<type>/')
-	def render(style, type='html'):
-		if type.startswith('html'):
+	@app.route('/render/<style>/<otype>/')
+	def render(style, otype='html'):
+		if otype.startswith('html'):
 			html = render_template('%s.html' % style).replace('<table>', table)
 			html_doc = HTML(string=html)
 			stylesheets = find_stylesheets(
@@ -76,10 +76,12 @@ def create_app(config_mode=None, config_file=None):
 			styles = _get_styles(app, style_urls)
 			kwargs = {'styles': styles}
 			return render_template('%s.html' % style, **kwargs).replace('<table>', table)
-		elif type.startswith('pdf'):
+		elif otype.startswith('md'):
+			return render_template('%s.html' % style)
+		elif otype.startswith('pdf'):
 			kwargs = {'to_print': True}
 			return render_pdf(url_for('index', style=style))
-		elif type.startswith('png'):
+		elif otype.startswith('png'):
 			kwargs = {'to_print': True}
 			html = render_template('%s.html' % style, **kwargs).replace('<table>', table)
 			html_doc = HTML(string=html)

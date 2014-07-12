@@ -36,6 +36,7 @@ class Config(object):
 	EXPORT_DIR = p.join(_basedir, 'exports')
 	INFO_PATH = p.join(_basedir, 'info.yml')
 	STYLE = 'development'
+	TYPE = 'html'
 	TABLE = '<table class="table table-striped">'
 
 	BOOTSTRAP_USE_MINIFIED = False

@@ -15,3 +15,4 @@ pytz==2013.9
 requests==1.2.3
 six==1.5.2
 tabulate==0.7.2
+html2text==2014.7.3
