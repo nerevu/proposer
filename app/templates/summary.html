@@ -7,9 +7,10 @@
 ### Overview
 
 I propose that you ({{ macros.compname() }}) hire me ({{ g.site.author }}) to
-{{ g.project_goal }}.  within {{ macros.pluralize(g.timeframe.development.units, g.timeframe.development.period) }} for **{{ macros.projcost() }} {{ g.currency }}**.
-Upon completion of the project (hereafter referred to as
-{{ g.project_name }}), I will deliver {{ macros.listize(g.deliverables) }}.
+{{ g.project_goal }}. This project, (hereafter referred to as
+{{ g.project_name }}), shall be completed within
+{{ macros.pluralize(g.timeframe.development.units, g.timeframe.development.period) }}
+for a cost of **{{ macros.projcost() }} {{ g.currency }}**. Upon completion of {{ g.project_name }} I will deliver {{ macros.listize(g.deliverables) }}.
 The features {{ g.project_name }} will have are {{ macros.listize(g.features) }}.
 {%- if g.services -%}Additionally, I shall perform the services of
 {{ macros.listize(g.services) }}.{% endif %}
