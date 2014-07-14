@@ -49,6 +49,7 @@ def propose(info=None, style=None, otype=None):
 		h = html2text.HTML2Text()
 		h.ignore_links = True
 		h.ignore_emphasis = True
+		h.body_width = 65
 		content = h.handle(content)
 
 	with open(proposal_file, 'w', encoding='utf-8') as f:
