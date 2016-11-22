@@ -1,0 +1,12 @@
+{% import "macros.html"  as macros %}
+
+<div class="jumbotron">
+  <h1>Proposal for {{ g.project_name }}</h1>
+  <dl class="dl-horizontal">
+    <dt>Proposed by</dt><dd>{{ g.site.author_company }}</dd>
+    <dt>Submitted on</dt><dd>{{ g.site.date }}</dd>
+    <dt>Submitted to</dt><dd>{{ macros.compname() }}</dd>
+    <dt>Proposal ID</dt><dd>{{ g.project_num }}-rev{{ g.revision }}</dd>
+  </dl>
+</div>
+<hr>

@@ -1,0 +1,90 @@
+{% import "macros.html"  as macros %}
+
+## Project Summary
+
+- - -
+{% if g.include_level_3 %}### Overview{% endif %}
+
+I propose that you ({{ macros.compname() }}) hire me ({{ g.site.author_company }}) to
+{{ g.project_goal }}. This project, (hereafter referred to as
+{{ g.project_name }}), shall be completed
+
+{%- if g.timeframe and g.timeframe.development.period -%}
+	{{ ' within' }} {{
+		macros.pluralize(macros.projunits(), macros.projperiod()) }}{{ ' ' }}
+{%- else -%}
+	{{ ' in a TBD timeframe, and ' }}
+{%- endif -%}
+
+for a
+
+{%- if macros.projcost() -%}
+	{{ ' total cost of' }} **{{ macros.projcost() }} {{ g.currency }}**
+	{%- if g.project_credits -%}
+		{{ ' (an additional cost of ' }}{{ macros.adnlcost() }} {{ g.currency }}
+		over the {{ g.project_credits }} {{ g.currency }} already paid)
+	{%- endif -%}.
+{%- else -%}
+	{{ ' TBD cost.' }}
+{%- endif %}
+
+{% if g.include_level_3 %}### Specifics{% endif %}
+{% if g.features -%}
+	**Features:** {{ ' The' }} features {{ g.project_name }} will have are
+	{{ macros.listize(g.features) }}.
+{%- endif %}
+
+{% if g.deliverables %}
+**Deliverables:** {{ ' Upon' }} completion of {{ g.project_name }}, I will deliver
+{{ macros.listize(g.deliverables) }}.
+{%- endif -%}
+
+{%- if g.services -%}
+	{{ ' Additionally' }}, I shall perform the services of
+	{{ macros.listize(g.services) }}.
+{%- endif %}
+
+{% if g.missing %}
+**Missing:** This proposal does not include the following: {{ macros.listize(g.missing, false) }}.
+{%- endif -%}
+
+{% if g.include_contact_info %}
+### Points of Contact
+
+Company | Contact | Email | Phone | Skype
+--------|---------|-------|-------|------
+{{ g.short_company_name }} | {{ g.client_contact_name }} | [{{ g.client_contact_email }}](mailto:{{ g.client_contact_email }}?Subject={{ g.project_name }}) | {{ g.client_contact_phone }} | {{ g.client_contact_skype }}
+{{ g.site.author_company }} | {{ g.site.author }} | [{{ g.site.author_email }}](mailto:{{ g.site.author_email }}?Subject={{ g.project_name }}) | {{ macros.listize3(g.site.author_phone) }} | {{ g.site.author_skype }}
+{% endif %}
+
+{% if g.include_objectives %}
+### Objectives
+
+{% if g.deliverables %}
+#### Deliverables
+
+Upon the completion of {{ g.project_name }}, I will deliver the following items:
+
+{% for deliverable in g.deliverables %}
+* **{{ deliverable.name }}**{% if deliverable.desc %}: {{ deliverable.desc }}{% endif %}
+{% endfor %}
+{%- endif -%}
+
+{% if g.features %}
+#### Features
+
+{{ g.project_name }} will have the following features:
+
+{% for feature in g.features %}
+* **{{ feature.name }}**: {{ feature.desc }}
+{% endfor %}{% endif %}
+{%- endif -%}
+
+{% if g.services %}
+#### Services
+
+I will perform the following services regarding {{ g.project_name }}:
+
+{% for service in g.services %}
+* **{{ service.name }}**: {{ service.desc }}
+{% endfor %}{% endif %}

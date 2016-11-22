@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% import "macros.html"  as macros %}
+{% block container_content %}
+
+	<div class="row">
+		<div class="span12">
+		{% filter markdown %}
+
+{{ g.site.date }}<br>
+
+# {{ g.project_name }}
+
+## Recipient
+
+- - -
+
+{{ g.client_contact_name }}<br>
+{{ g.client_position }}<br>
+{% for i in g.client_address %}{{i}}<br>{% endfor %}
+
+## Introduction
+
+- - -
+
+For the past five years, I've lived in Arusha, Tanzania and traveled across Africa and abroad. During my time living and working in Tanzania, I've come to appreciate the challenges one must overcome when running a business. Bad roads, intermittent network connectivity, and frequent power outages necessitated finding innovative ways of exchanging data with colleagues in the field.
+
+While attending Open Data Day in Nairobi, I met Moses Sitati who informed me about HDX and the data scientist opening. I believe my background in consulting, data/business analysis, and web development offer the ideal combination of expertise you seek. I am enthusiastic about working at HDX and enhancing the  platform as your new data scientist.
+
+## Relevant Skills/Experience
+
+- - -
+
+### Technical Experience
+
+For the majority of my professional life I have organized, analyzed, and visualized data. Starting with my time at [MIT](http://web.mit.edu/), the engineering statistics class Design of Experiments taught me the value of randomized trials. While at [MIDIOR Consulting](http://www.midior.com), I developed a knack for creating Microsoft Excel and Access applications to replace inefficient manual reporting processes, manage staffing levels, and efficiently allocate resources. During my 3 years with [Global Cycle Solutions (GCS)](http://gcstz.com/), I developed SQLite applications to categorize and track prospects, monitor the sales team, and automate financial reporting. Furthermore, I wrote numerous scripts to massage business data into the required formats.
+
+Currently, as an independent developer and founder of [Nerevu Development](https://www.linkedin.com/company/nerevu), I develop web applications, shell scripts, and backend APIs. The following table highlights my progress in the field of data science and its relation to the key organizations I've worked with.
+
+Skill{% for i in g.companies %}{% if i.is_release %}|{{ i.phase }}{% endif %}{% endfor %}
+--------{% for i in g.companies %}{% if i.is_release %}|:-------:{% endif %}{% endfor %}
+{% for f in g.features %}{{ f.name }}{% for i in g.companies %}{% if i.is_release %}{% if i.features[f.id] %}|✅{% else %}|{% endif %}{% endif %}{% endfor %}
+{% endfor %}
+
+### Data Visualization Experience
+
+Since a major duty of the HDX data scientist is data visualization, I will highlight several dataviz projects I've completed.
+
+{% for i in g.projects %}
+* **{{ i.phase }}**: {{ i.description }} (
+{%- if i.source %}[source]({{ i.source }}) | {% endif %}
+{%- if i.demo %}[demo]({{ i.demo }}){% endif %})
+{% endfor %}
+
+The following table describes the various web technologies I used to build these web apps.
+
+Category|Technology{% for i in g.projects %}{% if i.is_release %}|{{ i.phase }}{% endif %}{% endfor %}
+--------|----------{% for i in g.projects %}{% if i.is_release %}|:-------:{% endif %}{% endfor %}
+{% for f in g.frontend %}{{ f.category }}|{{ f.name }}{% for i in g.projects %}{% if i.is_release %}{% if i.frontend[f.id] %}|✅{% else %}|{% endif %}{% endif %}{% endfor %}
+{% endfor %}
+
+In fact, the document you are reading right now is a product of a tool I initially built to help a marketing consultant create AdWords reports for her clients. While the script's specifics have changed drastically with each incarnation, its data driven core remains the same.
+
+### RESTful API Experience
+
+In reference to the API development duties of the HDX data scientist, I will now spotlight a few of the backend APIs I've created.
+
+{% for i in g.apis %}
+* **{{ i.phase }}**: {{ i.description }} (
+{%- if i.source %}[source]({{ i.source }}) | {% endif %}
+{%- if i.demo %}[demo]({{ i.demo }}){% endif %})
+{% endfor %}
+
+
+The following table describes the various web and server technologies I used to build these APIs.
+
+Category|Technology{% for i in g.apis %}{% if i.is_release %}|{{ i.phase }}{% endif %}{% endfor %}
+--------|----------{% for i in g.apis %}{% if i.is_release %}|:-------:{% endif %}{% endfor %}
+{% for f in g.backend %}{{ f.category }}|{{ f.name }}{% for i in g.apis %}{% if i.is_release %}{% if i.backend[f.id] %}|✅{% else %}|{% endif %}{% endif %}{% endfor %}
+{% endfor %}
+
+### Programming Experience
+
+I learned to code at an early age; in high school I wrote my first program in BASIC: a [_Drugwars_](http://en.wikipedia.org/wiki/Drugwars) clone for my TI-82 calculator. By college I had mastered Excel Pivot Tables and dabbled with with Linux shell scripting in BASH. After graduating, I created Visual Basic automation applications at MIDIOR, made my first website in PHP, and created SQL reporting tools at GCS.
+
+In 2011 I found Python and fell in love with its simplicity and elegance. I soon replaced PHP with it as my language of choice for scripts or backend web development projects. More recently, I have been using coffeescript/javascript to create dynamically responsive web applications and visualizations. The following table summaries my journey learning new programming languages over the years.
+
+Technology/Language | Experience ({{ g.timeframe.milestones.units }}s)|'03|'04|'05|'06|'07|'08|'09|'10|'11|'12|'13|'14|'15
+------|----------------------------------------------:|---|---|---|---|---|---|---|---|---|---|---|---|---
+{% for i in g.languages %}{{ i.phase }}|{{ i.duration }}{{ macros.fillsquares(i.start, i.duration) }}
+{% endfor %}
+
+## Additional Resources
+
+- - -
+
+I have enclosed my resume and should you wish to contact me, feel free to do so via voice at [+255 789 477 319](tel:+255 789 477 319), email at [reubano@gmail.com](mailto:reubano@gmail.com), or skype at [reubano](skype:reubano). I would be happy to schedule a convenient time to discuss potential data science opportunities with HDX. Should you wish to see more information about my background, please view {{ macros.listize2(g.links) }}
+
+Although I'm currently based in Arusha, Tanzania, I will be in Nairobi from Wednesday (3/25) through Sunday (3/29) and available to meet in person. Thank you for your time and consideration. I look forward to hearing from you soon.
+
+Sincerely,
+<br>
+<br>
+Reuben Cummings
+
+		{% endfilter %}
+		</div>
+	</div>
+{% endblock container_content %}

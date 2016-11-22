@@ -1,21 +1,12 @@
 {% extends "base.html" %}
 {% block container_content %}
-	{% include "header.html" %}
-
 	<div class="row">
 		<div class="span12">
 		{% filter markdown %}
-			{% include "toc.html" %}
 			{% include "summary.html" %}
 			{% include "skills.html" %}
-			{% include "scope.html" %}
-			{% include "expectations.html" %}
-			{% include "terms.html" %}
-			{% include "relationship.html" %}
-			{% include "sign.html" %}
 		{% endfilter %}
 		</div>
 	</div>
 	<hr>
-	{% include 'footer.html' %}
 {% endblock container_content %}

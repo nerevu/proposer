@@ -1,14 +1,16 @@
 # ----------------------- #
-#      Main Configs       #
+#            Client       #
 # ----------------------- #
-# Client
-client_name: Some client
+client_name: Some Client
+client_position: Some Postition
 client_email: client@fake.com
 client_phone: 555-5555
 full_company_name: Company, Inc.
 short_company_name: Company
 
-# Project
+# ----------------------- #
+#           Project       #
+# ----------------------- #
 project_name: Super Awesome Project
 project_goal: develop a super awesome search widget
 project_num: 123456
@@ -94,16 +96,41 @@ technology:
   language: Javascript
   framework: Node.js
 
-license:
+# ----------------------- #
+#    Supporting Info      #
+# ----------------------- #
+experience:
+- topic: REST API creation
+  entries: [{name: Prometheus API, site: 'http://prometheus.herokuapp.com/api'}]
+- topic: Responsive Web application development
+  entries: [{name: Tophubbers, site: 'http://tophubbers.herokuapp.com'}]
+- topic: User activity logging
+  entries: [{name: Flogger, site: 'http://flogger.herokuapp.com/api/logs'}]
 
+links:
+- name: My Project Portfolio
+  site: http://reubano.github.io/#portfolio
+- name: My LinkedIn Profile
+  site: https://www.linkedin.com/in/reubano
+
+# ----------------------- #
+#           Terms         #
+# ----------------------- #
+license:
 project_estimate_ave: 4500
 project_estimate_high: 5000
 project_estimate_low: 4000
 pricing: Range # Fixed, Range or Hourly
+days_valid: 7
 hourly_rate: 50
 currency: USD
-days_valid: 7
+payment:
+  name: Paypal
+  site: https://www.paypal.com/us/cgi-bin/webscr?cmd=%5fsend%2dmoney&nav=1
 
+# ----------------------- #
+#      Schedule           #
+# ----------------------- #
 timeframe:
   development:
     period: 5
@@ -122,9 +149,6 @@ timeframe:
     period: 4
     units: week
 
-# ----------------------- #
-#      Schedule Configs   #
-# ----------------------- #
 schedule:
 - phase: Research
   description: review current codebase, database structure, and requirements
@@ -139,7 +163,7 @@ schedule:
   is_release: true
   start: 2
   duration: 5
-  payment: 1000
+  payment: 1200
   features: {1: true, 2: true, 3: true}
 - phase: Beta
   description: complete widget demo
@@ -173,20 +197,3 @@ schedule:
   duration: 5
   payment: 1150
   features: {1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true, 8: true}
-
-# ----------------------- #
-#      Misc Configs       #
-# ----------------------- #
-links:
-- name: My Project Portfolio
-  site: http://reubano.github.io/#portfolio
-- name: My LinkedIn Profile
-  site: https://www.linkedin.com/in/reubano
-
-experience:
-- topic: REST API creation
-  entries: [{name: Prometheus API, site: 'http://prometheus.herokuapp.com/api'}]
-- topic: Responsive Web application development
-  entries: [{name: Tophubbers, site: 'http://tophubbers.herokuapp.com'}]
-- topic: User activity logging
-  entries: [{name: Flogger, site: 'http://flogger.herokuapp.com/api/logs'}]
