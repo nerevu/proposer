@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import yaml
-import html2text
 
 from os import path as p
 from pprint import pprint
@@ -15,6 +14,7 @@ manager = Manager(create_app)
 manager.add_option(
 	'-m', '--cfgmode', dest='config_mode', default='Development')
 manager.add_option('-f', '--cfgfile', dest='config_file', type=p.abspath)
+manager.main = manager.run  # Needed to do `manage <command>` from the cli
 
 
 def make_safe(name):
@@ -44,13 +44,6 @@ def propose(info=None, style=None, otype=None):
 	proposal_name = '%s_proposal.%s' % (safe_name, otype)
 	proposal_file = p.join(app.config['EXPORT_DIR'], proposal_name)
 	content = render_app(app, style, otype)
-
-	if otype.startswith('md'):
-		h = html2text.HTML2Text()
-		h.ignore_links = True
-		h.ignore_emphasis = True
-		h.body_width = 65
-		content = h.handle(content)
 
 	with open(proposal_file, 'w', encoding='utf-8') as f:
 		f.write(content)

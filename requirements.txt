@@ -16,3 +16,4 @@ requests==1.2.3
 six==1.5.2
 tabulate==0.7.2
 html2text==2014.7.3
+manage.py==0.2.10
