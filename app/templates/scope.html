@@ -15,10 +15,23 @@ The estimated cost for completing {{ g.project_name }} is **{{ macros.projcost()
 {% endfor %}
 
 If you are not happy with my work at the end of any phase, you will pay in full
-for all of the completed work (outlined in [Project schedule](#project-scheduling)) and are free to cancel the remainder of the contract. If at any time you want to add
+for all of the completed work (outlined in [Project schedule](#scheduling)) and are free to cancel the remainder of the contract. If at any time you want to add
 extra functionality (Add-ons), you can commission me to make the necessary
 revisions at the hourly rate of {{ g.hourly_rate }} {{ g.currency }}.
 
+#### Project Features
+
+{{ g.project_name }} includes the following features:
+
+{% for i in g.features %}
+* **{{ i.name }}**: {{ i.description }}
+{% endfor %}
+
+#### Example Sites
+
+Please view {{ macros.listize2(g.examples) }}
+
+{%- if g.timeframe -%}
 #### Project Structure
 
 Category | Details
@@ -27,6 +40,7 @@ Development Period|{{ macros.pluralize(g.timeframe.development.units, g.timefram
 Pricing Structure|{{ g.pricing }}
 Support|{{ macros.pluralize(g.timeframe.support.units, g.timeframe.support.period) }} {{ g.timeframe.support.methods }}
 Warranty|{{ macros.pluralize(g.timeframe.warranty.units, g.timeframe.warranty.period) }}
+{% endif %}
 
 {% if g.platform or g.technology %}
 ### Technical specifications
@@ -36,16 +50,17 @@ Warranty|{{ macros.pluralize(g.timeframe.warranty.units, g.timeframe.warranty.pe
 Mode | Hardware | Operating System
 -----|----------|-----------------
 Development|{{ g.platform.development.hardware }}|{{ g.platform.development.os }}
-Production|{{ g.platform.production.hardware }}|{{ g.platform.production.os }}
+{% if g.platform.testing %}Testing|{{ g.platform.testing.hardware }}|{{ g.platform.testing.os }}{% endif %}
+{% if g.platform.production %}Production|{{ g.platform.production.hardware }}|{{ g.platform.production.os }}{% endif %}
 {% endif %}
 
 {% if g.technology %}
 {{ g.project_name }} will require the use of the following technologies:
 
-Category | Type | Programming Language(s) | Framework
----------|------|-------------------------|----------
+Category | Type | Framework| Programming Language(s)
+---------|------|----------|-------------------------
 {% for i in g.technology -%}
-	{{ i.category }}|{{ i.type }}|{{ i.language }}|{{ i.framework }}
+	{{ i.category }}|{{ i.type }}|{{ i.framework }}|{{ i.language }}
 {% endfor %}
 {% endif %}
 {% endif %}
@@ -66,17 +81,19 @@ Phase | Duration ({{ g.timeframe.milestones.units }}s){{ macros.filldays(macros.
 {% endfor %}
 
 {% else %}
-Phase | Milestone | Due at Completion ({{ g.currency }}) | Duration ({{ g.timeframe.milestones.units }}s){{ filldays(macros.projdays()) }}
+Phase | Milestone | Due at Completion ({{ g.currency }}) | Duration ({{ g.timeframe.milestones.units }}s){{ macros.filldays(macros.projdays()) }}
 ------|-----------|-------------------------------------:|----------------------------------------------:{{ macros.fillbars(macros.projdays()) }}
 {% for i in g.schedule %}{{ i.phase }}|{{ i.milestone }}|{{ i.payment }}|{{ i.duration }}{{ macros.fillsquares(i.start, i.duration) }}
 {% endfor %}
 {% endif %}
 
-{% if g.schedule|sum(attribute='payment') != g.project_estimate_ave %}
-`Warning, payments of {{ g.schedule|sum(attribute='payment')}} do not equal quote of {{g.project_estimate_ave}}!`
+{% if g.schedule|sum(attribute='payment') + g.project_credits != g.project_estimate_ave %}
+`Warning, payments of {{ g.schedule|sum(attribute='payment') + g.project_credits }} do not equal quote of {{ g.project_estimate_ave }}!`
 {% endif %}
 
-{{ '`Warning, durations do not equal timeframe!`' if g.schedule|sum(attribute='duration') != macros.projdays()|int }}
+{% if macros.maxend(g.schedule, macros.projdays()) %}
+`Warning, end day of {{ macros.maxend(g.schedule, macros.projdays()) }} is greater than timeframe of {{ macros.projdays()|int }}!`
+{% endif %}
 
 #### Milestone/Release Comparison
 

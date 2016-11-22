@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block container_content %}
+	<div class="row">
+		<div class="span12">
+		{% filter markdown %}
+			{% include "summary.html" %}
+			{% include "skills.html" %}
+		{% endfilter %}
+		</div>
+	</div>
+	<hr>
+{% endblock container_content %}
